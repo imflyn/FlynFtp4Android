@@ -1,6 +1,8 @@
 package ftp4jstack;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 
 import ftp4j.FTPFile;
 
@@ -47,21 +49,35 @@ public class FtpUploadHandler extends FtpHandler
 
         try
         {
+//            if (null != ftpFile && ftpFile.getSize() < localFile.length())
+//            {
+//                this.bytesTotal = (int) (localFile.length() - ftpFile.getSize());
+//                this.ftpClient.upload(localFile, ftpFile.getSize(), this.ftpDataTransferListener);
+//            } else
+//            {
+//                this.bytesTotal = (int) localFile.length();
+//                this.ftpClient.upload(localFile, this.ftpDataTransferListener);
+//
+//                int index = this.ftpRequest.getRemoteFilePath().lastIndexOf("/");
+//                String newname = remoteDirectory + this.ftpRequest.getRemoteFilePath().substring(index, this.ftpRequest.getRemoteFilePath().length());
+//                String oldname = remoteDirectory + File.separator + localFile.getName();
+//
+//                this.ftpClient.rename(oldname, newname);
+//            }
+            
+            int index = this.ftpRequest.getRemoteFilePath().lastIndexOf("/");
+            String newname = remoteDirectory + this.ftpRequest.getRemoteFilePath().substring(index, this.ftpRequest.getRemoteFilePath().length());
             if (null != ftpFile && ftpFile.getSize() < localFile.length())
             {
                 this.bytesTotal = (int) (localFile.length() - ftpFile.getSize());
-                this.ftpClient.upload(localFile, ftpFile.getSize(), this.ftpDataTransferListener);
+                this.ftpClient.upload(newname, new FileInputStream(localFile), ftpFile.getSize(), ftpFile.getSize(),  this.ftpDataTransferListener);
+           
             } else
             {
                 this.bytesTotal = (int) localFile.length();
-                this.ftpClient.upload(localFile, this.ftpDataTransferListener);
-
-                int index = this.ftpRequest.getRemoteFilePath().lastIndexOf("/");
-                String newname = remoteDirectory + this.ftpRequest.getRemoteFilePath().substring(index, this.ftpRequest.getRemoteFilePath().length());
-                String oldname = remoteDirectory + File.separator + localFile.getName();
-
-                this.ftpClient.rename(oldname, newname);
+                this.ftpClient.upload(newname, new BufferedInputStream(new FileInputStream(localFile),4096), 0, 0,  this.ftpDataTransferListener);
             }
+            
         } catch (Exception e)
         {
             throw new CustomFtpExcetion(e);

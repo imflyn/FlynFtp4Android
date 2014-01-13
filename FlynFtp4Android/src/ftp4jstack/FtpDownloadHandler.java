@@ -57,6 +57,7 @@ public class FtpDownloadHandler extends FtpHandler
             {
                 this.bytesTotal = (int) (ftpFile.getSize() - tempFile.length());
                 this.ftpClient.download(this.ftpRequest.getRemoteFilePath(), localFile, tempFile.length(), this.ftpDataTransferListener);
+                
             } else
             {
                 this.bytesTotal = (int) ftpFile.getSize();
