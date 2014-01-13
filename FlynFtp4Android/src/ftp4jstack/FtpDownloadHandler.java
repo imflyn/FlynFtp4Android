@@ -40,11 +40,11 @@ public class FtpDownloadHandler extends FtpHandler
             throw new CustomFtpExcetion("Remote File not exists.");
         }
         File localFile = new File(this.ftpRequest.getLocalFilePath());
+        if (localFile.exists() && localFile.length() >= ftpFile.getSize())
+            throw new CustomFtpExcetion("Local file exists.");
         try
         {
-            if (localFile.exists() && localFile.length() >= ftpFile.getSize())
-                throw new CustomFtpExcetion("Local file exists.");
-            else if (localFile.exists() && localFile.length() > 0)
+            if (localFile.exists() && localFile.length() > 0)
             {
                 this.ftpClient.download(this.ftpRequest.getRemoteFilePath(), localFile, localFile.length(), this.ftpDataTransferListener);
             } else
@@ -57,5 +57,4 @@ public class FtpDownloadHandler extends FtpHandler
         }
     }
 
-    
 }
