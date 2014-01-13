@@ -40,16 +40,22 @@ public class FtpDownloadHandler extends FtpHandler
             throw new CustomFtpExcetion("Remote File not exists.");
         }
         File localFile = new File(this.ftpRequest.getLocalFilePath());
-        if (localFile.exists() && localFile.length() >= ftpFile.getSize())
-            throw new CustomFtpExcetion("Local file exists.");
+        File tempFile = new File(localFile.getName().substring(0, localFile.getName().lastIndexOf(".")) + ".tmp");
+        if (localFile.exists())
+            throw new CustomFtpExcetion("LocalFile already exists.");
+        else if (tempFile.exists() && tempFile.length() >= ftpFile.getSize())
+            throw new CustomFtpExcetion("TempFile has been created and is wrong.");
+
         try
         {
             if (localFile.exists() && localFile.length() > 0)
             {
-                this.ftpClient.download(this.ftpRequest.getRemoteFilePath(), localFile, localFile.length(), this.ftpDataTransferListener);
+                this.ftpClient.download(this.ftpRequest.getRemoteFilePath(), localFile, tempFile.length(), this.ftpDataTransferListener);
             } else
             {
-                this.ftpClient.download(this.ftpRequest.getRemoteFilePath(), localFile, this.ftpDataTransferListener);
+                tempFile.createNewFile();
+                this.ftpClient.download(this.ftpRequest.getRemoteFilePath(), tempFile, this.ftpDataTransferListener);
+                tempFile.renameTo(localFile);
             }
         } catch (Exception e)
         {
