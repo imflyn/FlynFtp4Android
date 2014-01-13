@@ -29,6 +29,7 @@ public abstract class FtpHandler
     protected FtpHandler(FtpRequest ftpRequest, FtpResponseListener ftpResponseListener)
     {
         this.ftpResponseListener = ftpResponseListener;
+        this.ftpRequest = ftpRequest;
         this.ftpClient = new FTPClient();
         init();
     }
@@ -221,7 +222,8 @@ public abstract class FtpHandler
                     if (isCancelled())
                         return;
                     doTask();
-                    this.ftpResponseListener.sendSuccessMessage();
+                    if (null != this.ftpResponseListener)
+                        this.ftpResponseListener.sendSuccessMessage();
                     return;
                 }
                 // catch (InterruptedException e)
@@ -247,9 +249,11 @@ public abstract class FtpHandler
         } finally
         {
             this.isFinished = true;
-            this.ftpResponseListener.sendFinishMessage();
+            if (null != this.ftpResponseListener)
+                this.ftpResponseListener.sendFinishMessage();
         }
-        this.ftpResponseListener.sendFailuerMessage(cause);
+        if (null != this.ftpResponseListener)
+            this.ftpResponseListener.sendFailuerMessage(cause);
     }
 
     protected final boolean ifRetry()
@@ -288,46 +292,47 @@ public abstract class FtpHandler
 
     protected void setUseSynchronousMode(boolean value)
     {
-        this.ftpResponseListener.setUseSynchronousMode(value);
+        if (null != this.ftpResponseListener)
+            this.ftpResponseListener.setUseSynchronousMode(value);
     }
 
     protected void updateProgress()
     {
 
     }
-    
+
     protected FTPDataTransferListener ftpDataTransferListener = new FTPDataTransferListener()
-    {
+                                                              {
 
-        @Override
-        public void transferred(int length)
-        {
+                                                                  @Override
+                                                                  public void transferred(int length)
+                                                                  {
 
-        }
+                                                                  }
 
-        @Override
-        public void started()
-        {
+                                                                  @Override
+                                                                  public void started()
+                                                                  {
 
-        }
+                                                                  }
 
-        @Override
-        public void failed()
-        {
+                                                                  @Override
+                                                                  public void failed()
+                                                                  {
 
-        }
+                                                                  }
 
-        @Override
-        public void completed()
-        {
+                                                                  @Override
+                                                                  public void completed()
+                                                                  {
 
-        }
+                                                                  }
 
-        @Override
-        public void aborted()
-        {
+                                                                  @Override
+                                                                  public void aborted()
+                                                                  {
 
-        }
-    };
+                                                                  }
+                                                              };
 
 }

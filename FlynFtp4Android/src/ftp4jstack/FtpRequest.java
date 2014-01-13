@@ -56,7 +56,7 @@ public class FtpRequest
         this.ifRetry = ifRetry;
     }
 
-    class FtpInfo
+    public static class FtpInfo
     {
         private String host;
         private int    port;
