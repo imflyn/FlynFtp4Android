@@ -42,17 +42,25 @@ public class FtpUploadHandler extends FtpHandler
             throw new CustomFtpExcetion("LocalFile not found.");
 
         FTPFile ftpFile = getRemoteFile(this.ftpRequest.getRemoteFilePath(), null);
-        if (null != ftpFile && ftpFile.getSize() > localFile.length())
-            throw new CustomFtpExcetion("RemoteFile not found.");
+        if (null != ftpFile && ftpFile.getSize() >= localFile.length())
+            throw new CustomFtpExcetion("RemoteFile exists.");
 
         try
         {
-            if (ftpFile.getSize() > 0 && ftpFile.getSize() < localFile.length())
+            if (null != ftpFile && ftpFile.getSize() < localFile.length())
             {
+                this.bytesTotal = (int) (localFile.length() - ftpFile.getSize());
                 this.ftpClient.upload(localFile, ftpFile.getSize(), this.ftpDataTransferListener);
             } else
             {
+                this.bytesTotal = (int) localFile.length();
                 this.ftpClient.upload(localFile, this.ftpDataTransferListener);
+
+                int index = this.ftpRequest.getRemoteFilePath().lastIndexOf("/");
+                String newname = remoteDirectory + this.ftpRequest.getRemoteFilePath().substring(index, this.ftpRequest.getRemoteFilePath().length());
+                String oldname = remoteDirectory + File.separator + localFile.getName();
+
+                this.ftpClient.rename(oldname, newname);
             }
         } catch (Exception e)
         {

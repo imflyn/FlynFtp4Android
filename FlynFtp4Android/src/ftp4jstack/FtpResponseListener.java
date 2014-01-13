@@ -41,6 +41,7 @@ public abstract class FtpResponseListener implements Listener
 
         protected InternalHandler(FtpResponseListener ftpResponseHandler)
         {
+            super(Looper.getMainLooper());
             this.mHandler = new WeakReference<FtpResponseListener>(ftpResponseHandler);
         }
 
@@ -146,7 +147,7 @@ public abstract class FtpResponseListener implements Listener
             case FAILURE_MESSAGE:
                 messageData = (Object[]) msg.obj;
                 if (messageData != null && messageData.length == 1)
-                    onRetry((Integer) messageData[0]);
+                   onFailure((Throwable)messageData[0]);
                 else
                     Log.e(TAG, "FAILURE_MESSAGE didn't get enough params.");
                 break;

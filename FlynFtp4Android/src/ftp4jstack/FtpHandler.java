@@ -1,6 +1,8 @@
 package ftp4jstack;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.util.Log;
 import ftp4j.FTPClient;
@@ -19,12 +21,20 @@ public abstract class FtpHandler
 
     protected FtpResponseListener ftpResponseListener;
     protected FtpRequest          ftpRequest;
-    protected final FTPClient     ftpClient;
+    protected FTPClient           ftpClient;
 
     private int                   executionCount      = 0;
     private boolean               isCancelled         = false;
     private boolean               cancelIsNotified    = false;
     private boolean               isFinished          = false;
+
+    private Timer                 timer;
+    private boolean               isScheduleing       = true;
+    private long                  timeStamp           = System.currentTimeMillis();
+    private long                  sizeStamp           = 0;
+    private int                   currentSpeed        = 0;
+    protected int                 bytesTotal          = 0;
+    private int                   bytesWritten        = 0;
 
     protected FtpHandler(FtpRequest ftpRequest, FtpResponseListener ftpResponseListener)
     {
@@ -62,11 +72,12 @@ public abstract class FtpHandler
         {
             try
             {
-                String[] replyCode = this.ftpClient.connect(this.ftpRequest.getFtpInfo().getHost(), this.ftpRequest.getFtpInfo().getPort());
-                for (int i = 0; i < replyCode.length; i++)
-                {
-                    Log.i(TAG, "connect replyCode:".concat(replyCode[0]));
-                }
+                this.ftpClient.connect(this.ftpRequest.getFtpInfo().getHost(), this.ftpRequest.getFtpInfo().getPort());
+                // unuseful
+                // for (int i = 0; i < replyCode.length; i++)
+                // {
+                // Log.i(TAG, "Connect replyCode:".concat(replyCode[0]));
+                // }
                 return true;
             } catch (IllegalStateException e)
             {
@@ -95,8 +106,8 @@ public abstract class FtpHandler
             {
                 this.ftpClient.login(this.ftpRequest.getFtpInfo().getUsername(), this.ftpRequest.getFtpInfo().getPassword(), this.ftpRequest.getFtpInfo().getAccount());
 
-                if (this.ftpClient.isCompressionEnabled())
-                    this.ftpClient.setCompressionEnabled(true);// 支持压缩传输
+                // if (this.ftpClient.isCompressionEnabled())
+                // this.ftpClient.setCompressionEnabled(true);// 支持压缩传输
 
                 return true;
             } catch (IllegalStateException e)
@@ -105,13 +116,13 @@ public abstract class FtpHandler
                 Log.e(TAG, "Client not connected.");
             } catch (IOException e)
             {
-                new CustomFtpExcetion("login error IOException", e);
+                new CustomFtpExcetion("Login error IOException", e);
             } catch (FTPIllegalReplyException e)
             {
-                new CustomFtpExcetion("login error FTPIllegalReplyException", e);
+                new CustomFtpExcetion("Login error FTPIllegalReplyException", e);
             } catch (FTPException e)
             {
-                new CustomFtpExcetion("login error FTPException", e);
+                new CustomFtpExcetion("Login error FTPException", e);
             }
         }
         return false;
@@ -128,7 +139,7 @@ public abstract class FtpHandler
                 return false;
         } catch (Exception e)
         {
-            new CustomFtpExcetion("remoteFileExists error Exception", e);
+            new CustomFtpExcetion("remoteFileExists  Exception", e);
         }
         return false;
     }
@@ -144,7 +155,7 @@ public abstract class FtpHandler
                 ftpFile = ftpFileName[0];
         } catch (Exception e)
         {
-            new CustomFtpExcetion("getRemoteFile error Exception", e);
+            new CustomFtpExcetion("GetRemoteFile error Exception", e);
         }
         return ftpFile;
     }
@@ -157,7 +168,7 @@ public abstract class FtpHandler
                 this.ftpClient.createDirectory(new String(remoteDirectory.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
         } catch (Exception e)
         {
-            new CustomFtpExcetion("createDirectory error Exception", e);
+            new CustomFtpExcetion("CreateDirectory error Exception", e);
         }
     }
 
@@ -168,17 +179,17 @@ public abstract class FtpHandler
             this.ftpClient.changeDirectory(new String(remoteDirectory.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
         } catch (Exception e)
         {
-            new CustomFtpExcetion("createDirectory error Exception", e);
+            new CustomFtpExcetion("CreateDirectory error Exception", e);
         }
     }
 
     protected void disconnect()
     {
-        if (null != this.ftpClient && this.ftpClient.isConnected() && this.ftpClient.isAuthenticated())
+        if (null != this.ftpClient && this.ftpClient.isConnected())
         {
             try
             {
-                this.ftpClient.logout();
+                this.ftpClient.disconnect(true);
             } catch (IllegalStateException e)
             {
                 // should not happen
@@ -194,15 +205,7 @@ public abstract class FtpHandler
                 Log.e(TAG, "disconnect error FTPException", e);
             } finally
             {
-                try
-                {
-                    if (null != this.ftpClient && this.ftpClient.isConnected())
-                        this.ftpClient.disconnect(true);
-                } catch (Exception e)
-                {
-                    Log.e(TAG, "disconnect error Exception", e);
-                    // ingore
-                }
+                this.ftpClient = null;
             }
         }
     }
@@ -221,6 +224,7 @@ public abstract class FtpHandler
                 {
                     if (isCancelled())
                         return;
+                    startTimer();
                     doTask();
                     if (null != this.ftpResponseListener)
                         this.ftpResponseListener.sendSuccessMessage();
@@ -248,6 +252,7 @@ public abstract class FtpHandler
             cause = e;
         } finally
         {
+            stopTimer();
             this.isFinished = true;
             if (null != this.ftpResponseListener)
                 this.ftpResponseListener.sendFinishMessage();
@@ -296,9 +301,53 @@ public abstract class FtpHandler
             this.ftpResponseListener.setUseSynchronousMode(value);
     }
 
-    protected void updateProgress()
+    private void updateProgress(int count)
     {
+        this.bytesWritten += count;
+    }
 
+    private void startTimer()
+    {
+        if (null == this.timer)
+            this.timer = new Timer();
+
+        final TimerTask task = new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                if (isScheduleing && !Thread.currentThread().isInterrupted())
+                {
+                    long nowTime = System.currentTimeMillis();
+                    long spendTime = nowTime - timeStamp;
+                    timeStamp = nowTime;
+
+                    long getSize = bytesWritten - sizeStamp;
+                    sizeStamp = bytesWritten;
+                    if (spendTime > 0)
+                        currentSpeed = (int) ((getSize / spendTime) / 1.024);
+
+                    if (null != ftpResponseListener)
+                    {
+                        ftpResponseListener.sendProgressMessage(bytesWritten, bytesTotal, currentSpeed);
+                    }
+                } else
+                {
+                    stopTimer();
+                }
+            }
+        };
+        this.timer.schedule(task, 100, 1000);
+    }
+
+    private void stopTimer()
+    {
+        this.isScheduleing = false;
+        if (this.timer != null)
+        {
+            this.timer.cancel();
+            this.timer = null;
+        }
     }
 
     protected FTPDataTransferListener ftpDataTransferListener = new FTPDataTransferListener()
@@ -307,7 +356,7 @@ public abstract class FtpHandler
                                                                   @Override
                                                                   public void transferred(int length)
                                                                   {
-
+                                                                      updateProgress(length);
                                                                   }
 
                                                                   @Override
