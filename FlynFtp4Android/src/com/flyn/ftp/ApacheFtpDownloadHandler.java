@@ -58,13 +58,12 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
 
             int count;
             byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-            while ((count = inputStream.read(buffer)) != -1)
+            while ((count = inputStream.read(buffer)) != -1 && !isCancelled())
             {
                 outputStream.write(buffer, 0, count);
                 updateProgress(count);
             }
 
-            tempFile.renameTo(localFile);
         } catch (FileNotFoundException e)
         {
             throw new CustomFtpExcetion(e);
@@ -103,6 +102,8 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
         }
         if (!result)
             throw new CustomFtpExcetion("Download file from ftp failed.");
+        else
+            tempFile.renameTo(localFile);
     }
 
 }

@@ -111,6 +111,9 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                 this.ftpClient.setFileTransferMode(FILE_TRANSFER_MODE);
                 this.ftpClient.enterLocalPassiveMode();
                 this.ftpClient.setBufferSize(DEFAULT_BUFFER_SIZE);
+                this.ftpClient.setSendBufferSize(DEFAULT_BUFFER_SIZE);
+                this.ftpClient.setSendDataSocketBufferSize(DEFAULT_BUFFER_SIZE);
+                this.ftpClient.setReceieveDataSocketBufferSize(DEFAULT_BUFFER_SIZE);
                 this.ftpClient.setReceiveBufferSize(DEFAULT_BUFFER_SIZE);
 
                 FTPClientConfig config = new FTPClientConfig();
@@ -357,15 +360,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
     protected final boolean cancel()
     {
         this.isCancelled = true;
-        try
-        {
-            this.ftpClient.abort();
-        } catch (IOException e)
-        {
-        } finally
-        {
-            disconnect();
-        }
+        disconnect();
         return isCancelled();
     }
 
@@ -385,13 +380,13 @@ public abstract class ApacheFtpHandler extends IFtpHandler
     {
         if (null == this.timer)
             this.timer = new Timer();
-
+        isScheduleing = true;
         final TimerTask task = new TimerTask()
         {
             @Override
             public void run()
             {
-                if (isScheduleing && !Thread.currentThread().isInterrupted())
+                if (isScheduleing && !Thread.currentThread().isInterrupted() && !isCancelled())
                 {
                     long nowTime = System.currentTimeMillis();
                     long spendTime = nowTime - timeStamp;
@@ -406,13 +401,14 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                     {
                         ftpResponseListener.sendProgressMessage(bytesWritten, bytesTotal, currentSpeed);
                     }
+
                 } else
                 {
                     stopTimer();
                 }
             }
         };
-        this.timer.schedule(task, 200, 1500);
+        this.timer.schedule(task, 200, 1300);
     }
 
     private void stopTimer()

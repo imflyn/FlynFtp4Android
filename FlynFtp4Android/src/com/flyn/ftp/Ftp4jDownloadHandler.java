@@ -45,11 +45,12 @@ public class Ftp4jDownloadHandler extends Ftp4jHandler
                 tempFile.createNewFile();
                 this.ftpClient.download(this.ftpRequest.getRemoteFilePath(), tempFile, this.ftpDataTransferListener);
             }
-            tempFile.renameTo(localFile);
+
         } catch (Exception e)
         {
             throw new CustomFtpExcetion(e);
         }
+        tempFile.renameTo(localFile);
     }
 
 }

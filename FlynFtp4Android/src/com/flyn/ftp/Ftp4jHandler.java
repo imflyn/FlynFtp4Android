@@ -99,6 +99,7 @@ public abstract class Ftp4jHandler extends IFtpHandler
         {
             try
             {
+
                 this.ftpClient.login(this.ftpRequest.getFtpInfo().getUsername(), this.ftpRequest.getFtpInfo().getPassword(), this.ftpRequest.getFtpInfo().getAccount());
 
                 // if (this.ftpClient.isCompressionEnabled())
@@ -183,7 +184,10 @@ public abstract class Ftp4jHandler extends IFtpHandler
         {
             try
             {
-                this.ftpClient.disconnect(true);
+                this.ftpClient.abortCurrentDataTransfer(false);
+                this.ftpClient.abruptlyCloseCommunication();
+                this.ftpClient.abortCurrentConnectionAttempt();
+                this.ftpClient.logout();
             } catch (IllegalStateException e)
             {
                 // should not happen
@@ -197,7 +201,22 @@ public abstract class Ftp4jHandler extends IFtpHandler
             } catch (FTPException e)
             {
                 Log.e(TAG, "disconnect error FTPException", e);
-            } 
+            } finally
+            {
+                if (null != this.ftpClient)
+                    try
+                    {
+                        this.ftpClient.disconnect(true);
+                    } catch (IllegalStateException e)
+                    {
+                    } catch (IOException e)
+                    {
+                    } catch (FTPIllegalReplyException e)
+                    {
+                    } catch (FTPException e)
+                    {
+                    }
+            }
         }
     }
 
@@ -292,17 +311,7 @@ public abstract class Ftp4jHandler extends IFtpHandler
     protected final boolean cancel()
     {
         this.isCancelled = true;
-        try
-        {
-            this.ftpClient.abortCurrentDataTransfer(true);
-        } catch (FTPIllegalReplyException e)
-        {
-        } catch (IOException e)
-        {
-        } finally
-        {
-            disconnect();
-        }
+        disconnect();
         return isCancelled();
     }
 
@@ -322,14 +331,14 @@ public abstract class Ftp4jHandler extends IFtpHandler
     {
         if (null == this.timer)
             this.timer = new Timer();
-
+        isScheduleing = true;
         final TimerTask task = new TimerTask()
         {
             @Override
             public void run()
             {
-                if (isScheduleing && !Thread.currentThread().isInterrupted())
-                { 
+                if (isScheduleing && !Thread.currentThread().isInterrupted() && !isCancelled())
+                {
                     long nowTime = System.currentTimeMillis();
                     long spendTime = nowTime - timeStamp;
                     timeStamp = nowTime;
@@ -349,7 +358,7 @@ public abstract class Ftp4jHandler extends IFtpHandler
                 }
             }
         };
-        this.timer.schedule(task, 200, 1500);
+        this.timer.schedule(task, 200, 1300);
     }
 
     private void stopTimer()

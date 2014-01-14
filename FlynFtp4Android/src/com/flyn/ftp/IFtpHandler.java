@@ -12,4 +12,3 @@ public abstract class IFtpHandler
 
     abstract void setUseSynchronousMode(boolean value);
 }
-  

@@ -66,7 +66,7 @@ public class ApacheFtpUploadHandler extends ApacheFtpHandler
 
             byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
             int count;
-            while ((count = inputStream.read(buffer)) != -1)
+            while ((count = inputStream.read(buffer)) != -1 && !isCancelled())
             {
                 outputStream.write(buffer, 0, count);
                 updateProgress(count);

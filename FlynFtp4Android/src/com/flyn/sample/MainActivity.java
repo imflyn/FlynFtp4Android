@@ -28,7 +28,7 @@ public class MainActivity extends Activity
     private TextView    tv_apachedownload;
     private ProgressBar pb_apacheupload;
     private ProgressBar pb_apachedownload;
-  
+
     private FtpTask     task1;
     private FtpTask     task2;
     private FtpTask     task3;
@@ -61,11 +61,14 @@ public class MainActivity extends Activity
                     public void run()
                     {
                         if (null == task1)
-                            jupload();
-                        else
                         {
+                            tv_4jupload.setText("start");
+                            jupload();
+                        } else
+                        {
+                            tv_4jupload.setText("stop");
                             task1.cancel(false);
-                            task1=null;
+                            task1 = null;
                         }
                     }
                 }).start();
@@ -85,11 +88,14 @@ public class MainActivity extends Activity
                     public void run()
                     {
                         if (null == task2)
-                            jdownload();
-                        else
                         {
+                            tv_4jdownload.setText("start");
+                            jdownload();
+                        } else
+                        {
+                            tv_4jdownload.setText("stop");
                             task2.cancel(false);
-                            task2=null;
+                            task2 = null;
                         }
                     }
                 }).start();
@@ -109,11 +115,14 @@ public class MainActivity extends Activity
                     public void run()
                     {
                         if (null == task3)
-                            aupload();
-                        else
                         {
+                            tv_apacheupload.setText("start");
+                            aupload();
+                        } else
+                        {
+                            tv_apacheupload.setText("stop");
                             task3.cancel(false);
-                            task3=null;
+                            task3 = null;
                         }
                     }
                 }).start();
@@ -133,11 +142,16 @@ public class MainActivity extends Activity
                     public void run()
                     {
                         if (null == task4)
+                        {
                             adownload();
+                            tv_apachedownload.setText("start");
+                        }
+
                         else
                         {
+                            tv_apachedownload.setText("stop");
                             task4.cancel(false);
-                            task4=null;
+                            task4 = null;
                         }
                     }
                 }).start();
@@ -149,15 +163,15 @@ public class MainActivity extends Activity
     private void jupload()
     {
         final long time = System.currentTimeMillis();
-        task1 = FtpStack.ftp4jUpload(new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator
+        task1 = FtpStack.ftp4jUpload(new FtpRequest(new FtpInfo("ftpaddresss", 21, "username", "password", null), Environment.getExternalStorageDirectory() + File.separator + "flyn" + File.separator
                 + "aa.jpg", "/var/ftp/imuser/android/image/2014_01_13/testFtp4j.jpg", false), new FtpResponseListener()
         {
 
             @Override
             public void onSuccess()
             {
-                tv_4jupload.setText("完成==" + "总耗时:" + (System.currentTimeMillis() - time));
-                System.out.println("总耗时:" + (System.currentTimeMillis() - time));
+                tv_4jupload.setText("OK==" + "spendtime:" + (System.currentTimeMillis() - time));
+                System.out.println("spendtime:" + (System.currentTimeMillis() - time));
                 pb_4jupload.setMax(2);
                 pb_4jupload.setProgress(2);
             }
@@ -177,28 +191,29 @@ public class MainActivity extends Activity
                 pb_4jupload.setProgress(bytesWritten);
             }
         });
-        task1.start(true);
+        task1.start(false);
     }
 
     private void jdownload()
     {
         final long time = System.currentTimeMillis();
-        try
-        {
-            File file = new File(Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg");
-            file.delete();
-        } catch (Exception e)
-        {
-        }
+        // try
+        // {
+        // File file = new File(Environment.getExternalStorageDirectory() +
+        // File.separator + "flyn" + File.separator + "aa.jpg");
+        // file.delete();
+        // } catch (Exception e)
+        // {
+        // }
 
-        task2 = FtpStack.ftp4jDownload(new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj"
+        task2 = FtpStack.ftp4jDownload(new FtpRequest(new FtpInfo("yourftpaddress", 21, "username", "password", null), Environment.getExternalStorageDirectory() + File.separator + "flyn"
                 + File.separator + "aa.jpg", "/var/ftp/imuser/android/image/2014_01_13/1389600666136_0113161137.jpg", false), new FtpResponseListener()
         {
 
             @Override
             public void onSuccess()
             {
-                tv_4jdownload.setText("完成===" + "总耗时:" + (System.currentTimeMillis() - time));
+                tv_4jdownload.setText("OK===" + "spendtime:" + (System.currentTimeMillis() - time));
                 pb_4jdownload.setMax(2);
                 pb_4jdownload.setProgress(2);
             }
@@ -219,20 +234,20 @@ public class MainActivity extends Activity
                 pb_4jdownload.setProgress(bytesWritten);
             }
         });
-        task2.start(true);
+        task2.start(false);
     }
 
     private void aupload()
     {
         final long time = System.currentTimeMillis();
-        task3 = FtpStack.apacheUpload(new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj"
-                + File.separator + "aa.jpg", "/var/ftp/imuser/android/image/2014_01_13/testFtpApache.jpg", false), new FtpResponseListener()
+        task3 = FtpStack.apacheUpload(new FtpRequest(new FtpInfo("ftpaddresss", 21, "username", "password", null), Environment.getExternalStorageDirectory() + File.separator + "flyn" + File.separator
+                + "aa.jpg", "/var/ftp/imuser/android/image/2014_01_13/testFtpApache.jpg", false), new FtpResponseListener()
         {
 
             @Override
             public void onSuccess()
             {
-                tv_apacheupload.setText("完成==" + "总耗时:" + (System.currentTimeMillis() - time));
+                tv_apacheupload.setText("OK==" + "spendtime:" + (System.currentTimeMillis() - time));
                 pb_apacheupload.setMax(2);
                 pb_apacheupload.setProgress(2);
             }
@@ -262,23 +277,24 @@ public class MainActivity extends Activity
     private void adownload()
     {
         final long time = System.currentTimeMillis();
-        try
-        {
-            File file = new File(Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg");
-            file.delete();
-        } catch (Exception e)
-        {
-        }
+        // try
+        // {
+        // File file = new File(Environment.getExternalStorageDirectory() +
+        // File.separator + "flyn" + File.separator + "aa.jpg");
+        // file.delete();
+        // } catch (Exception e)
+        // {
+        // }
 
-        task4 = FtpStack.apacheDownload(new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj"
+        task4 = FtpStack.apacheDownload(new FtpRequest(new FtpInfo("ftpaddresss", 21, "username", "password", null), Environment.getExternalStorageDirectory() + File.separator + "flyn"
                 + File.separator + "aa.jpg", "/var/ftp/imuser/android/image/2014_01_13/1389600666136_0113161137.jpg", false), new FtpResponseListener()
         {
 
             @Override
             public void onSuccess()
             {
-                tv_apachedownload.setText("完成==" + "总耗时:" + (System.currentTimeMillis() - time));
-                System.out.println("总耗时:" + (System.currentTimeMillis() - time));
+                tv_apachedownload.setText("OK==" + "spendtime:" + (System.currentTimeMillis() - time));
+                System.out.println("spendtime:" + (System.currentTimeMillis() - time));
                 pb_apachedownload.setMax(2);
                 pb_apachedownload.setProgress(2);
             }

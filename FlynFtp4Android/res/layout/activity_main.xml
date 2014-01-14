@@ -27,7 +27,7 @@
 
     <TextView
         android:id="@+id/tv_ftp4jupload"
-        android:layout_width="wrap_content"
+        android:layout_width="200dip"
         android:layout_height="wrap_content"
         android:layout_above="@+id/pb_ftp4jupload"
         android:layout_alignLeft="@+id/pb_ftp4jupload"
@@ -54,7 +54,7 @@
 
     <TextView
         android:id="@+id/tv_ftp4jdownload"
-        android:layout_width="wrap_content"
+        android:layout_width="200dip"
         android:layout_height="wrap_content"
         android:layout_above="@+id/pb_ftp4jdownload"
         android:layout_alignLeft="@+id/pb_ftp4jdownload"
@@ -82,7 +82,7 @@
 
     <TextView
         android:id="@+id/tv_apacheupload"
-        android:layout_width="wrap_content"
+        android:layout_width="200dip"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btn_apacheupload"
         android:layout_alignBottom="@+id/btn_apacheupload"
@@ -110,7 +110,7 @@
 
     <TextView
         android:id="@+id/tv_apachedownload"
-        android:layout_width="wrap_content"
+        android:layout_width="200dip"
         android:layout_height="wrap_content"
         android:layout_above="@+id/pb_apachedownload"
         android:layout_alignRight="@+id/pb_apachedownload"
