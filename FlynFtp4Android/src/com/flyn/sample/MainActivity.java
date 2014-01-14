@@ -14,6 +14,7 @@ import com.flyn.ftp.FtpInfo;
 import com.flyn.ftp.FtpRequest;
 import com.flyn.ftp.FtpResponseListener;
 import com.flyn.ftp.FtpStack;
+import com.flyn.ftp.FtpTask;
 import com.flyn.ftp4android.R;
 
 public class MainActivity extends Activity
@@ -27,6 +28,11 @@ public class MainActivity extends Activity
     private TextView    tv_apachedownload;
     private ProgressBar pb_apacheupload;
     private ProgressBar pb_apachedownload;
+    
+    private FtpTask task1;
+    private FtpTask task2;
+    private FtpTask task3;
+    private FtpTask task4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -54,8 +60,10 @@ public class MainActivity extends Activity
                     @Override
                     public void run()
                     {
-
+                        if(null==task1)
                         jupload();
+                        else
+                            task1.cancel(false);
                     }
                 }).start();
             }
@@ -72,8 +80,10 @@ public class MainActivity extends Activity
 
                     @Override
                     public void run()
-                    {
+                    {if(null==task2)
                         jdownload();
+                        else
+                            task2.cancel(false);
                     }
                 }).start();
             }
@@ -91,7 +101,10 @@ public class MainActivity extends Activity
                     @Override
                     public void run()
                     {
-                        aupload();
+                      if(null==task3)
+                            aupload();
+                            else
+                                task3.cancel(false);
                     }
                 }).start();
             }
@@ -108,8 +121,10 @@ public class MainActivity extends Activity
 
                     @Override
                     public void run()
-                    {
+                    { if(null==task4)
                         adownload();
+                        else
+                            task4.cancel(false);
                     }
                 }).start();
             }
@@ -120,7 +135,7 @@ public class MainActivity extends Activity
     private void jupload()
     {
         final long time = System.currentTimeMillis();
-        FtpStack.ftp4jUpload(
+        task1=FtpStack.ftp4jUpload(
                 new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg",
                         "/var/ftp/imuser/android/image/2014_01_13/testFtp4j.jpg", false), new FtpResponseListener()
                 {
@@ -148,8 +163,8 @@ public class MainActivity extends Activity
                         pb_4jupload.setMax(bytesTotal);
                         pb_4jupload.setProgress(bytesWritten);
                     }
-                }).start(false);
-
+                });
+        task1.start(true);
     }
 
     private void jdownload()
@@ -163,7 +178,7 @@ public class MainActivity extends Activity
         {
         }
 
-        FtpStack.ftp4jDownload(
+        task2=FtpStack.ftp4jDownload(
                 new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg",
                         "/var/ftp/imuser/android/image/2014_01_13/1389600666136_0113161137.jpg", false), new FtpResponseListener()
                 {
@@ -191,14 +206,14 @@ public class MainActivity extends Activity
                         pb_4jdownload.setMax(bytesTotal);
                         pb_4jdownload.setProgress(bytesWritten);
                     }
-                }).start(false);
-
+                });
+        task2.start(true);
     }
 
     private void aupload()
     {
         final long time = System.currentTimeMillis();
-        FtpStack.apacheUpload(
+      task3=  FtpStack.apacheUpload(
                 new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg",
                         "/var/ftp/imuser/android/image/2014_01_13/testFtpApache.jpg", false), new FtpResponseListener()
                 {
@@ -228,7 +243,8 @@ public class MainActivity extends Activity
                         pb_apacheupload.setMax(bytesTotal);
                         pb_apacheupload.setProgress(bytesWritten);
                     }
-                }).start(false);
+                });
+            task3    .start(false);
 
     }
 
@@ -243,7 +259,7 @@ public class MainActivity extends Activity
         {
         }
 
-        FtpStack.apacheDownload(
+        task4=FtpStack.apacheDownload(
                 new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg",
                         "/var/ftp/imuser/android/image/2014_01_13/1389600666136_0113161137.jpg", false), new FtpResponseListener()
                 {
@@ -272,7 +288,8 @@ public class MainActivity extends Activity
                         pb_apachedownload.setMax(bytesTotal);
                         pb_apachedownload.setProgress(bytesWritten);
                     }
-                }).start(false);
+                });
+        task4.start(false);
 
     }
 }
