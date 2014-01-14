@@ -63,6 +63,7 @@ public class ApacheFtpUploadHandler extends ApacheFtpHandler
                 outputStream.write(buffer, 0, count);
                 updateProgress(count);
             }
+            outputStream.flush();
 
         } catch (FileNotFoundException e)
         {
