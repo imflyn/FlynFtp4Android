@@ -13,8 +13,6 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
-import org.apache.commons.net.io.CopyStreamEvent;
-import org.apache.commons.net.io.CopyStreamListener;
 
 import android.util.Log;
 
@@ -22,7 +20,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
 {
     private static final String   TAG                              = ApacheFtpHandler.class.getName();
 
-    protected static final int    DEFAULT_BUFFER_SIZE              = 6 * 1024;
+    protected static final int    DEFAULT_BUFFER_SIZE              = 8 * 1024;
     private static final int      DEFAULT_RETRY_COUNT              = 3;
     private static final int      KEEP_ALIVE_TIMEOUT               = -1;
     private static final int      CONTROL_KEEP_ALIVE_REPLY_TIMEOUT = -1;
@@ -45,7 +43,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
     private long                  sizeStamp                        = 0;
     private int                   currentSpeed                     = 0;
     protected int                 bytesTotal                       = 0;
-    private int                   bytesWritten                     = 0;
+    protected int                 bytesWritten                     = 0;
 
     protected ApacheFtpHandler(FtpRequest ftpRequest, FtpResponseListener ftpResponseListener)
     {
@@ -61,7 +59,6 @@ public abstract class ApacheFtpHandler extends IFtpHandler
         this.ftpClient.setControlKeepAliveTimeout(KEEP_ALIVE_TIMEOUT);
         this.ftpClient.setControlKeepAliveReplyTimeout(CONTROL_KEEP_ALIVE_REPLY_TIMEOUT);
         this.ftpClient.setListHiddenFiles(LIST_HIDDEN);
-        this.ftpClient.setCopyStreamListener(this.copyStreamListener);
         // suppress login details
         this.ftpClient.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out), true));
 
@@ -269,16 +266,11 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                             startTimer();
                             doTask();
                         }
+                    stopTimer();
                     if (null != this.ftpResponseListener && !isCancelled())
                         this.ftpResponseListener.sendSuccessMessage();
                     return;
-                }
-                // catch (InterruptedException e)
-                // {
-                // // Task should has be cancelled.
-                // cancel();
-                // }
-                catch (CustomFtpExcetion e)
+                } catch (CustomFtpExcetion e)
                 {
                     if (isCancelled())
                         return;
@@ -349,7 +341,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
             this.ftpResponseListener.setUseSynchronousMode(value);
     }
 
-    private void updateProgress(int count)
+    protected void updateProgress(int count)
     {
         this.bytesWritten += count;
     }
@@ -385,7 +377,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                 }
             }
         };
-        this.timer.schedule(task, 100, 1000);
+        this.timer.schedule(task, 300, 1000);
     }
 
     private void stopTimer()
@@ -397,20 +389,5 @@ public abstract class ApacheFtpHandler extends IFtpHandler
             this.timer = null;
         }
     }
-
-    protected CopyStreamListener copyStreamListener = new CopyStreamListener()
-                                                    {
-
-                                                        @Override
-                                                        public void bytesTransferred(long totalBytesTransferred, int bytesTransferred, long streamSize)
-                                                        {
-                                                            updateProgress(bytesTransferred);
-                                                        }
-
-                                                        @Override
-                                                        public void bytesTransferred(CopyStreamEvent event)
-                                                        {
-                                                        }
-                                                    };
 
 }

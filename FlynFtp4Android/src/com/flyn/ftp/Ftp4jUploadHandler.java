@@ -36,10 +36,7 @@ public class Ftp4jUploadHandler extends Ftp4jHandler
             if (null != ftpFile && ftpFile.getSize() < localFile.length())
             {
                 this.bytesTotal = (int) (localFile.length() - ftpFile.getSize());
-                // this.ftpClient.upload(this.ftpRequest.getRemoteFilePath(),
-                // new BufferedInputStream(new FileInputStream(localFile),
-                // 4096), ftpFile.getSize(), ftpFile.getSize(),
-                // this.ftpDataTransferListener);
+                this.bytesWritten = (int) ftpFile.getSize();
                 this.ftpClient.append(this.ftpRequest.getRemoteFilePath(), new BufferedInputStream(new FileInputStream(localFile), 4096), ftpFile.getSize(), this.ftpDataTransferListener);
             } else
             {

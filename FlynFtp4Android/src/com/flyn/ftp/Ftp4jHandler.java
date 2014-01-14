@@ -34,7 +34,7 @@ public abstract class Ftp4jHandler extends IFtpHandler
     private long                  sizeStamp           = 0;
     private int                   currentSpeed        = 0;
     protected int                 bytesTotal          = 0;
-    private int                   bytesWritten        = 0;
+    protected int                 bytesWritten        = 0;
 
     protected Ftp4jHandler(FtpRequest ftpRequest, FtpResponseListener ftpResponseListener)
     {
@@ -233,6 +233,7 @@ public abstract class Ftp4jHandler extends IFtpHandler
                             startTimer();
                             doTask();
                         }
+                    stopTimer();
                     if (null != this.ftpResponseListener && !isCancelled())
                         this.ftpResponseListener.sendSuccessMessage();
                     return;

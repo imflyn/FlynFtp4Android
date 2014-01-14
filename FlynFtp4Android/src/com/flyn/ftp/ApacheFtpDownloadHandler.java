@@ -1,10 +1,11 @@
 package com.flyn.ftp;
 
-import java.io.BufferedOutputStream;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 
 import org.apache.commons.net.ftp.FTPFile;
 
@@ -35,22 +36,34 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
             tempFile.getParentFile().mkdirs();
 
         boolean result = false;
+        InputStream inputStream = null;
+        RandomAccessFile outputStream = null;
         try
         {
+
+            inputStream = new BufferedInputStream(this.ftpClient.retrieveFileStream(this.ftpRequest.getRemoteFilePath()));
+            outputStream = new RandomAccessFile(tempFile, "rw");
 
             if (localFile.exists() && localFile.length() > 0)
             {
                 this.bytesTotal = (int) (ftpFile.getSize() - tempFile.length());
-                this.ftpClient.setRestartOffset(tempFile.length());
-
+                this.bytesWritten = (int) tempFile.length();
+                this.ftpClient.setRestartOffset(ftpFile.getSize());
+                outputStream.seek(tempFile.length());
             } else
             {
-                this.ftpClient.setRestartOffset(0);
                 this.bytesTotal = (int) ftpFile.getSize();
+                tempFile.createNewFile();
             }
 
-            result = this.ftpClient.retrieveFile(this.ftpRequest.getRemoteFilePath(), new BufferedOutputStream(new FileOutputStream(tempFile), DEFAULT_BUFFER_SIZE));
-
+            int count;
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+            while ((count = inputStream.read(buffer)) != -1)
+            {
+                outputStream.write(buffer, 0, count);
+                updateProgress(count);
+            }
+            
             tempFile.renameTo(localFile);
         } catch (FileNotFoundException e)
         {
@@ -59,6 +72,32 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
         {
             throw new CustomFtpExcetion(e);
         } catch (NullPointerException e)
+        {
+            throw new CustomFtpExcetion(e);
+        } finally
+        {
+            if (null != inputStream)
+                try
+                {
+                    inputStream.close();
+                } catch (IOException e)
+                {
+                    // ingore
+                }
+            if (null != outputStream)
+                try
+                {
+                    outputStream.close();
+                } catch (IOException e)
+                {
+                    // ingore
+                }
+        }
+        try
+        {
+            result = this.ftpClient.completePendingCommand();
+
+        } catch (IOException e)
         {
             throw new CustomFtpExcetion(e);
         }

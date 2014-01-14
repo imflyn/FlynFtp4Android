@@ -1,8 +1,13 @@
 package com.flyn.ftp;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.commons.net.ftp.FTPFile;
 
@@ -30,28 +35,68 @@ public class ApacheFtpUploadHandler extends ApacheFtpHandler
             throw new CustomFtpExcetion("RemoteFile exists.");
 
         boolean result = false;
+        OutputStream outputStream = null;
+        InputStream inputStream = null;
         try
         {
-
+            outputStream = new BufferedOutputStream(this.ftpClient.appendFileStream(this.ftpRequest.getRemoteFilePath()));
+            inputStream = new BufferedInputStream(new FileInputStream(localFile));
             if (null != ftpFile && ftpFile.getSize() < localFile.length())
             {
                 this.bytesTotal = (int) (localFile.length() - ftpFile.getSize());
+                this.bytesWritten = (int) ftpFile.getSize();
                 this.ftpClient.setRestartOffset(ftpFile.getSize());
-
+                inputStream.skip(ftpFile.getSize());
             } else
-            {
+            { 
                 this.bytesTotal = (int) localFile.length();
-                this.ftpClient.setRestartOffset(0);
             }
-            result = this.ftpClient.appendFile(this.ftpRequest.getRemoteFilePath(), new BufferedInputStream(new FileInputStream(localFile), DEFAULT_BUFFER_SIZE));
 
-        } catch (Exception e)
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+            int count;
+            while ((count = inputStream.read(buffer)) != -1)
+            {
+                outputStream.write(buffer, 0, count);
+                updateProgress(count);
+            }
+
+        } catch (FileNotFoundException e)
+        {
+            throw new CustomFtpExcetion(e);
+        } catch (NullPointerException e)
+        {
+            throw new CustomFtpExcetion(e);
+        } catch (IOException e)
+        {
+            throw new CustomFtpExcetion(e);
+        } finally
+        {
+            if (null != outputStream)
+                try
+                {
+                    outputStream.close();
+                } catch (IOException e)
+                {
+                }
+            if (null != inputStream)
+                try
+                {
+                    inputStream.close();
+                } catch (IOException e)
+                {
+                }
+        }
+        try
+        {
+            result = this.ftpClient.completePendingCommand();
+
+        } catch (IOException e)
         {
             throw new CustomFtpExcetion(e);
         }
-
         if (!result)
             throw new CustomFtpExcetion("Upload file to ftp failed");
+
     }
 
 }
