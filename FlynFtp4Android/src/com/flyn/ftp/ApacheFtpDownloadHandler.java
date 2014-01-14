@@ -1,13 +1,17 @@
-package ftp4jstack;
+package com.flyn.ftp;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
-import ftp4j.FTPFile;
+import org.apache.commons.net.ftp.FTPFile;
 
-public class Ftp4jDownloadHandler extends Ftp4jHandler
+public class ApacheFtpDownloadHandler extends ApacheFtpHandler
 {
 
-    protected Ftp4jDownloadHandler(FtpRequest ftpRequest, FtpResponseListener ftpResponseHandler)
+    protected ApacheFtpDownloadHandler(FtpRequest ftpRequest, FtpResponseListener ftpResponseHandler)
     {
         super(ftpRequest, ftpResponseHandler);
     }
@@ -36,11 +40,6 @@ public class Ftp4jDownloadHandler extends Ftp4jHandler
     {
         FTPFile ftpFile = getRemoteFile(this.ftpRequest.getRemoteFilePath(), null);
 
-        if (null == ftpFile || ftpFile.getSize() <= 0)
-        {
-            throw new CustomFtpExcetion("Remote File not exists.");
-        }
-
         File localFile = new File(this.ftpRequest.getLocalFilePath());
         File tempFile = new File(this.ftpRequest.getLocalFilePath().substring(0, this.ftpRequest.getLocalFilePath().lastIndexOf(".")) + ".tmp");
 
@@ -51,24 +50,35 @@ public class Ftp4jDownloadHandler extends Ftp4jHandler
         else if (!localFile.exists() && !tempFile.exists())
             tempFile.getParentFile().mkdirs();
 
+        boolean result = false;
         try
         {
+
             if (localFile.exists() && localFile.length() > 0)
             {
                 this.bytesTotal = (int) (ftpFile.getSize() - tempFile.length());
-                this.ftpClient.download(this.ftpRequest.getRemoteFilePath(), localFile, tempFile.length(), this.ftpDataTransferListener);
+                this.ftpClient.setRestartOffset(tempFile.length());
 
             } else
             {
+                this.ftpClient.setRestartOffset(0);
                 this.bytesTotal = (int) ftpFile.getSize();
-                tempFile.createNewFile();
-                this.ftpClient.download(this.ftpRequest.getRemoteFilePath(), tempFile, this.ftpDataTransferListener);
-                tempFile.renameTo(localFile);
             }
-        } catch (Exception e)
+
+            result = this.ftpClient.retrieveFile(this.ftpRequest.getRemoteFilePath(), new BufferedOutputStream(new FileOutputStream(tempFile), DEFAULT_BUFFER_SIZE));
+
+        } catch (FileNotFoundException e)
         {
-            new CustomFtpExcetion(e);
+            throw new CustomFtpExcetion(e);
+        } catch (IOException e)
+        {
+            throw new CustomFtpExcetion(e);
+        } catch (NullPointerException e)
+        {
+            throw new CustomFtpExcetion(e);
         }
+        if (!result)
+            throw new CustomFtpExcetion("Download file from ftp failed.");
     }
 
 }

@@ -1,4 +1,4 @@
-package ftp4jstack;
+package com.flyn.ftp;
 
 public class FtpStack
 {

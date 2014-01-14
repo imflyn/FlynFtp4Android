@@ -1,4 +1,4 @@
-package ftp4jstack;
+package com.flyn.ftp;
 
 import java.io.BufferedInputStream;
 import java.io.File;

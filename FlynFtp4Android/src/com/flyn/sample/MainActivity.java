@@ -1,8 +1,6 @@
 package com.flyn.sample;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,13 +10,11 @@ import android.view.View.OnClickListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.flyn.ftp.FtpInfo;
+import com.flyn.ftp.FtpRequest;
+import com.flyn.ftp.FtpResponseListener;
+import com.flyn.ftp.FtpStack;
 import com.flyn.ftp4android.R;
-import com.talkingoa.android.main.ftp.ContinueFTP;
-
-import ftp4jstack.FtpInfo;
-import ftp4jstack.FtpRequest;
-import ftp4jstack.FtpResponseListener;
-import ftp4jstack.FtpStack;
 
 public class MainActivity extends Activity
 {
@@ -87,35 +83,6 @@ public class MainActivity extends Activity
                     @Override
                     public void run()
                     {
-                        long time = System.currentTimeMillis();
-                        try
-                        {
-                            File file = new File(Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg");
-                            file.delete();
-                        } catch (Exception e1)
-                        {
-                            e1.printStackTrace();
-                        }
-                        ContinueFTP continueFTP = new ContinueFTP();
-                        try
-                        {
-                            continueFTP.connect("ftp.talkingoa.com", 21, "imuser", "imuser");
-                            continueFTP.download("/var/ftp/imuser/android/image/2014_01_13/1389600666136_0113161137.jpg", Environment.getExternalStorageDirectory() + File.separator + "yyj"
-                                    + File.separator + "aa.jpg");
-                        } catch (IOException e)
-                        {
-                            e.printStackTrace();
-                        } finally
-                        {
-                            try
-                            {
-                                continueFTP.disconnect();
-                            } catch (IOException e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
-                        System.out.println("总耗时:" + (System.currentTimeMillis() - time));
                     }
                 }).start();
             }
@@ -133,24 +100,6 @@ public class MainActivity extends Activity
                     @Override
                     public void run()
                     {
-                        long time = System.currentTimeMillis();
-                        try
-                        {
-                            ContinueFTP myFtp = new ContinueFTP();
-                            myFtp.connect("ftp.talkingoa.com", 21, "imuser", "imuser");
-                            myFtp.ftpClient.makeDirectory(new String("android".getBytes("UTF-8"), "iso-8859-1"));
-                            myFtp.ftpClient.changeWorkingDirectory(new String("android".getBytes("UTF-8"), "iso-8859-1"));
-
-                            myFtp.upload(Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg",
-                                    "/var/ftp/imuser/android/image/2014_01_13/testContinueFTP.jpg", null);
-                        } catch (UnsupportedEncodingException e)
-                        {
-                            e.printStackTrace();
-                        } catch (IOException e)
-                        {
-                            e.printStackTrace();
-                        }
-                        System.out.println("总耗时:" + (System.currentTimeMillis() - time));
                     }
                 }).start();
             }

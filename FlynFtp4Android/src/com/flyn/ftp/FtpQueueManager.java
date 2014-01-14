@@ -1,4 +1,4 @@
-package ftp4jstack;
+package com.flyn.ftp;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
