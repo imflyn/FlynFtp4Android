@@ -1,6 +1,6 @@
 package com.flyn.ftp;
 
-public class FtpDispacther implements Runnable
+public class FtpDispacther   implements Runnable
 {
 
     private IFtpHandler ftpHandler;
@@ -40,4 +40,6 @@ public class FtpDispacther implements Runnable
     {
         this.ftpHandler.setUseSynchronousMode(value);
     }
+
+    
 }
