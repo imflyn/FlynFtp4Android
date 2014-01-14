@@ -17,24 +17,6 @@ public class Ftp4jUploadHandler extends Ftp4jHandler
     @Override
     protected void doTask() throws CustomFtpExcetion
     {
-        try
-        {
-            if (connect())
-                if (login())
-                {
-                    upload();
-                }
-        } catch (CustomFtpExcetion e)
-        {
-            throw new CustomFtpExcetion(e);
-        } finally
-        {
-            disconnect();
-        }
-    }
-
-    private void upload() throws CustomFtpExcetion
-    {
 
         File localFile = new File(this.ftpRequest.getLocalFilePath());
         if (!localFile.exists() || localFile.length() <= 0)
@@ -54,9 +36,11 @@ public class Ftp4jUploadHandler extends Ftp4jHandler
             if (null != ftpFile && ftpFile.getSize() < localFile.length())
             {
                 this.bytesTotal = (int) (localFile.length() - ftpFile.getSize());
-                this.ftpClient.upload(this.ftpRequest.getRemoteFilePath(), new BufferedInputStream(new FileInputStream(localFile), 4096), ftpFile.getSize(), ftpFile.getSize(),
-                        this.ftpDataTransferListener);
-
+                // this.ftpClient.upload(this.ftpRequest.getRemoteFilePath(),
+                // new BufferedInputStream(new FileInputStream(localFile),
+                // 4096), ftpFile.getSize(), ftpFile.getSize(),
+                // this.ftpDataTransferListener);
+                this.ftpClient.append(this.ftpRequest.getRemoteFilePath(), new BufferedInputStream(new FileInputStream(localFile), 4096), ftpFile.getSize(), this.ftpDataTransferListener);
             } else
             {
                 this.bytesTotal = (int) localFile.length();

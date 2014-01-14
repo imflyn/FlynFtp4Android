@@ -107,7 +107,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                     break __login;
                 }
 
-                // setting
+                // settings
                 this.ftpClient.setFileType(TRANSFER_TYPE);
                 this.ftpClient.enterLocalPassiveMode();
                 this.ftpClient.setTcpNoDelay(true);
@@ -183,7 +183,6 @@ public abstract class ApacheFtpHandler extends IFtpHandler
         }
         if (null != ftpFileName && ftpFileName.length > 0)
             ftpFile = ftpFileName[0];
-      
 
         return ftpFile;
     }
@@ -196,10 +195,10 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                 this.ftpClient.makeDirectory(new String(remoteDirectory.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
             } catch (UnsupportedEncodingException e)
             {
-                new CustomFtpExcetion(e);
+                throw new CustomFtpExcetion(e);
             } catch (IOException e)
             {
-                new CustomFtpExcetion(e);
+                throw new CustomFtpExcetion(e);
             }
     }
 
@@ -210,14 +209,14 @@ public abstract class ApacheFtpHandler extends IFtpHandler
             this.ftpClient.changeWorkingDirectory(new String(remoteDirectory.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
         } catch (UnsupportedEncodingException e)
         {
-            new CustomFtpExcetion(e);
+            throw new CustomFtpExcetion(e);
         } catch (IOException e)
         {
-            new CustomFtpExcetion(e);
+            throw new CustomFtpExcetion(e);
         }
     }
 
-    protected void disconnect() throws CustomFtpExcetion
+    protected void disconnect()
     {
         if (null != this.ftpClient && this.ftpClient.isConnected())
         {
@@ -227,7 +226,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                 this.ftpClient.logout();
             } catch (IOException e)
             {
-                throw new CustomFtpExcetion(e);
+                // ingore
             } finally
             {
                 try
@@ -236,7 +235,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                         this.ftpClient.disconnect();
                 } catch (IOException e)
                 {
-                    throw new CustomFtpExcetion(e);
+                    // ingore
                 } finally
                 {
                     this.ftpClient = null;
@@ -261,9 +260,16 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                 {
                     if (isCancelled())
                         return;
-                    startTimer();
-                    doTask();
-                    if (null != this.ftpResponseListener)
+
+                    if (connect())
+                        if (login())
+                        {
+                            if (isCancelled())
+                                return;
+                            startTimer();
+                            doTask();
+                        }
+                    if (null != this.ftpResponseListener && !isCancelled())
                         this.ftpResponseListener.sendSuccessMessage();
                     return;
                 }
@@ -289,6 +295,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
             cause = e;
         } finally
         {
+            disconnect();
             stopTimer();
             this.isFinished = true;
             if (null != this.ftpResponseListener)
@@ -403,7 +410,6 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                                                         @Override
                                                         public void bytesTransferred(CopyStreamEvent event)
                                                         {
-
                                                         }
                                                     };
 

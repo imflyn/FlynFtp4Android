@@ -86,13 +86,13 @@ public abstract class Ftp4jHandler extends IFtpHandler
                 return true;
             } catch (IOException e)
             {
-                new CustomFtpExcetion("Connect error IOException", e);
+                throw new CustomFtpExcetion("Connect error IOException", e);
             } catch (FTPIllegalReplyException e)
             {
-                new CustomFtpExcetion("Connect error FTPIllegalReplyException", e);
+                throw new CustomFtpExcetion("Connect error FTPIllegalReplyException", e);
             } catch (FTPException e)
             {
-                new CustomFtpExcetion("Connect error FTPException", e);
+                throw new CustomFtpExcetion("Connect error FTPException", e);
             }
         }
         return false;
@@ -116,13 +116,13 @@ public abstract class Ftp4jHandler extends IFtpHandler
                 Log.e(TAG, "Client not connected.");
             } catch (IOException e)
             {
-                new CustomFtpExcetion("Login error IOException", e);
+                throw new CustomFtpExcetion("Login error IOException", e);
             } catch (FTPIllegalReplyException e)
             {
-                new CustomFtpExcetion("Login error FTPIllegalReplyException", e);
+                throw new CustomFtpExcetion("Login error FTPIllegalReplyException", e);
             } catch (FTPException e)
             {
-                new CustomFtpExcetion("Login error FTPException", e);
+                throw new CustomFtpExcetion("Login error FTPException", e);
             }
         }
         return false;
@@ -139,9 +139,8 @@ public abstract class Ftp4jHandler extends IFtpHandler
                 return false;
         } catch (Exception e)
         {
-            new CustomFtpExcetion("remoteFileExists  Exception", e);
+            throw new CustomFtpExcetion("remoteFileExists  Exception", e);
         }
-        return false;
     }
 
     protected FTPFile getRemoteFile(String remotePath, String charset) throws CustomFtpExcetion
@@ -155,7 +154,7 @@ public abstract class Ftp4jHandler extends IFtpHandler
                 ftpFile = ftpFileName[0];
         } catch (Exception e)
         {
-            new CustomFtpExcetion("GetRemoteFile error Exception", e);
+            throw new CustomFtpExcetion("GetRemoteFile error Exception", e);
         }
         return ftpFile;
     }
@@ -168,7 +167,7 @@ public abstract class Ftp4jHandler extends IFtpHandler
                 this.ftpClient.createDirectory(new String(remoteDirectory.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
         } catch (Exception e)
         {
-            new CustomFtpExcetion("CreateDirectory error Exception", e);
+            throw new CustomFtpExcetion("CreateDirectory error Exception", e);
         }
     }
 
@@ -179,7 +178,7 @@ public abstract class Ftp4jHandler extends IFtpHandler
             this.ftpClient.changeDirectory(new String(remoteDirectory.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
         } catch (Exception e)
         {
-            new CustomFtpExcetion("CreateDirectory error Exception", e);
+            throw new CustomFtpExcetion("CreateDirectory error Exception", e);
         }
     }
 
@@ -225,18 +224,19 @@ public abstract class Ftp4jHandler extends IFtpHandler
                 {
                     if (isCancelled())
                         return;
-                    startTimer();
-                    doTask();
-                    if (null != this.ftpResponseListener)
+
+                    if (connect())
+                        if (login())
+                        {
+                            if (isCancelled())
+                                return;
+                            startTimer();
+                            doTask();
+                        }
+                    if (null != this.ftpResponseListener && !isCancelled())
                         this.ftpResponseListener.sendSuccessMessage();
                     return;
-                }
-                // catch (InterruptedException e)
-                // {
-                // // Task should has be cancelled.
-                // cancel();
-                // }
-                catch (CustomFtpExcetion e)
+                } catch (CustomFtpExcetion e)
                 {
                     if (isCancelled())
                         return;
@@ -253,6 +253,7 @@ public abstract class Ftp4jHandler extends IFtpHandler
             cause = e;
         } finally
         {
+            disconnect();
             stopTimer();
             this.isFinished = true;
             if (null != this.ftpResponseListener)

@@ -17,30 +17,10 @@ public class ApacheFtpUploadHandler extends ApacheFtpHandler
     @Override
     protected void doTask() throws CustomFtpExcetion
     {
-        try
-        {
-            if (connect())
-                if (login())
-                {
-                    upload();
-                }
-        } catch (CustomFtpExcetion e)
-        {
-            throw new CustomFtpExcetion(e);
-        } finally
-        {
-            disconnect();
-        }
-    }
-
-    private void upload() throws CustomFtpExcetion
-    {
-        
-
         File localFile = new File(this.ftpRequest.getLocalFilePath());
         if (!localFile.exists() || localFile.length() <= 0)
             throw new CustomFtpExcetion("LocalFile not found.");
-        
+
         String remoteDirectory = this.ftpRequest.getRemoteFilePath().substring(0, this.ftpRequest.getRemoteFilePath().lastIndexOf("/"));
         createDirectory(remoteDirectory, null);
         changeWorkingDirectory(remoteDirectory, null);
@@ -72,7 +52,6 @@ public class ApacheFtpUploadHandler extends ApacheFtpHandler
 
         if (!result)
             throw new CustomFtpExcetion("Upload file to ftp failed");
-
     }
 
 }

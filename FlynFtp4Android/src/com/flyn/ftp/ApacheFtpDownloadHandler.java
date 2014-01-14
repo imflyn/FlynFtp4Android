@@ -19,28 +19,9 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
     @Override
     protected void doTask() throws CustomFtpExcetion
     {
-
-        try
-        {
-            if (connect())
-                if (login())
-                {
-                    download();
-                }
-        } catch (CustomFtpExcetion e)
-        {
-            new CustomFtpExcetion(e);
-        } finally
-        {
-            disconnect();
-        }
-    }
-
-    private void download() throws CustomFtpExcetion
-    {
         FTPFile ftpFile = getRemoteFile(this.ftpRequest.getRemoteFilePath(), null);
-        
-        if(null==ftpFile||ftpFile.getSize()<=0)
+
+        if (null == ftpFile || ftpFile.getSize() <= 0)
             throw new CustomFtpExcetion("RemoteFile not found.");
 
         File localFile = new File(this.ftpRequest.getLocalFilePath());
@@ -69,7 +50,7 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
             }
 
             result = this.ftpClient.retrieveFile(this.ftpRequest.getRemoteFilePath(), new BufferedOutputStream(new FileOutputStream(tempFile), DEFAULT_BUFFER_SIZE));
-            
+
             tempFile.renameTo(localFile);
         } catch (FileNotFoundException e)
         {

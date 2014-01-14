@@ -15,25 +15,6 @@ public class Ftp4jDownloadHandler extends Ftp4jHandler
     @Override
     protected void doTask() throws CustomFtpExcetion
     {
-
-        try
-        {
-            if (connect())
-                if (login())
-                {
-                    download();
-                }
-        } catch (CustomFtpExcetion e)
-        {
-            new CustomFtpExcetion(e);
-        } finally
-        {
-            disconnect();
-        }
-    }
-
-    private void download() throws CustomFtpExcetion
-    {
         FTPFile ftpFile = getRemoteFile(this.ftpRequest.getRemoteFilePath(), null);
 
         if (null == ftpFile || ftpFile.getSize() <= 0)
@@ -67,7 +48,7 @@ public class Ftp4jDownloadHandler extends Ftp4jHandler
             tempFile.renameTo(localFile);
         } catch (Exception e)
         {
-            new CustomFtpExcetion(e);
+            throw new CustomFtpExcetion(e);
         }
     }
 
