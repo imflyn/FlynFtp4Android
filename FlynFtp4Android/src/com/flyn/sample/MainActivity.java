@@ -28,11 +28,11 @@ public class MainActivity extends Activity
     private TextView    tv_apachedownload;
     private ProgressBar pb_apacheupload;
     private ProgressBar pb_apachedownload;
-    
-    private FtpTask task1;
-    private FtpTask task2;
-    private FtpTask task3;
-    private FtpTask task4;
+
+    private FtpTask     task1;
+    private FtpTask     task2;
+    private FtpTask     task3;
+    private FtpTask     task4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -60,10 +60,13 @@ public class MainActivity extends Activity
                     @Override
                     public void run()
                     {
-                        if(null==task1)
-                        jupload();
+                        if (null == task1)
+                            jupload();
                         else
+                        {
                             task1.cancel(false);
+                            task1=null;
+                        }
                     }
                 }).start();
             }
@@ -80,10 +83,14 @@ public class MainActivity extends Activity
 
                     @Override
                     public void run()
-                    {if(null==task2)
-                        jdownload();
+                    {
+                        if (null == task2)
+                            jdownload();
                         else
+                        {
                             task2.cancel(false);
+                            task2=null;
+                        }
                     }
                 }).start();
             }
@@ -101,10 +108,13 @@ public class MainActivity extends Activity
                     @Override
                     public void run()
                     {
-                      if(null==task3)
+                        if (null == task3)
                             aupload();
-                            else
-                                task3.cancel(false);
+                        else
+                        {
+                            task3.cancel(false);
+                            task3=null;
+                        }
                     }
                 }).start();
             }
@@ -121,10 +131,14 @@ public class MainActivity extends Activity
 
                     @Override
                     public void run()
-                    { if(null==task4)
-                        adownload();
+                    {
+                        if (null == task4)
+                            adownload();
                         else
+                        {
                             task4.cancel(false);
+                            task4=null;
+                        }
                     }
                 }).start();
             }
@@ -135,35 +149,34 @@ public class MainActivity extends Activity
     private void jupload()
     {
         final long time = System.currentTimeMillis();
-        task1=FtpStack.ftp4jUpload(
-                new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg",
-                        "/var/ftp/imuser/android/image/2014_01_13/testFtp4j.jpg", false), new FtpResponseListener()
-                {
+        task1 = FtpStack.ftp4jUpload(new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator
+                + "aa.jpg", "/var/ftp/imuser/android/image/2014_01_13/testFtp4j.jpg", false), new FtpResponseListener()
+        {
 
-                    @Override
-                    public void onSuccess()
-                    {
-                        tv_4jupload.setText("完成==" + "总耗时:" + (System.currentTimeMillis() - time));
-                        System.out.println("总耗时:" + (System.currentTimeMillis() - time));
-                        pb_4jupload.setMax(2);
-                        pb_4jupload.setProgress(2);
-                    }
+            @Override
+            public void onSuccess()
+            {
+                tv_4jupload.setText("完成==" + "总耗时:" + (System.currentTimeMillis() - time));
+                System.out.println("总耗时:" + (System.currentTimeMillis() - time));
+                pb_4jupload.setMax(2);
+                pb_4jupload.setProgress(2);
+            }
 
-                    @Override
-                    public void onFailure(Throwable error)
-                    {
-                        error.printStackTrace();
+            @Override
+            public void onFailure(Throwable error)
+            {
+                error.printStackTrace();
 
-                    }
+            }
 
-                    @Override
-                    public void onProgress(int bytesWritten, int bytesTotal, int speed)
-                    {
-                        tv_4jupload.setText(String.valueOf(speed));
-                        pb_4jupload.setMax(bytesTotal);
-                        pb_4jupload.setProgress(bytesWritten);
-                    }
-                });
+            @Override
+            public void onProgress(int bytesWritten, int bytesTotal, int speed)
+            {
+                tv_4jupload.setText(String.valueOf(speed));
+                pb_4jupload.setMax(bytesTotal);
+                pb_4jupload.setProgress(bytesWritten);
+            }
+        });
         task1.start(true);
     }
 
@@ -178,73 +191,71 @@ public class MainActivity extends Activity
         {
         }
 
-        task2=FtpStack.ftp4jDownload(
-                new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg",
-                        "/var/ftp/imuser/android/image/2014_01_13/1389600666136_0113161137.jpg", false), new FtpResponseListener()
-                {
+        task2 = FtpStack.ftp4jDownload(new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj"
+                + File.separator + "aa.jpg", "/var/ftp/imuser/android/image/2014_01_13/1389600666136_0113161137.jpg", false), new FtpResponseListener()
+        {
 
-                    @Override
-                    public void onSuccess()
-                    {
-                        tv_4jdownload.setText("完成===" + "总耗时:" + (System.currentTimeMillis() - time));
-                        pb_4jdownload.setMax(2);
-                        pb_4jdownload.setProgress(2);
-                    }
+            @Override
+            public void onSuccess()
+            {
+                tv_4jdownload.setText("完成===" + "总耗时:" + (System.currentTimeMillis() - time));
+                pb_4jdownload.setMax(2);
+                pb_4jdownload.setProgress(2);
+            }
 
-                    @Override
-                    public void onFailure(Throwable error)
-                    {
-                        error.printStackTrace();
+            @Override
+            public void onFailure(Throwable error)
+            {
+                error.printStackTrace();
 
-                    }
+            }
 
-                    @Override
-                    public void onProgress(int bytesWritten, int bytesTotal, int speed)
-                    {
+            @Override
+            public void onProgress(int bytesWritten, int bytesTotal, int speed)
+            {
 
-                        tv_4jdownload.setText(String.valueOf(speed));
-                        pb_4jdownload.setMax(bytesTotal);
-                        pb_4jdownload.setProgress(bytesWritten);
-                    }
-                });
+                tv_4jdownload.setText(String.valueOf(speed));
+                pb_4jdownload.setMax(bytesTotal);
+                pb_4jdownload.setProgress(bytesWritten);
+            }
+        });
         task2.start(true);
     }
 
     private void aupload()
     {
         final long time = System.currentTimeMillis();
-      task3=  FtpStack.apacheUpload(
-                new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg",
-                        "/var/ftp/imuser/android/image/2014_01_13/testFtpApache.jpg", false), new FtpResponseListener()
-                {
+        task3 = FtpStack.apacheUpload(new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj"
+                + File.separator + "aa.jpg", "/var/ftp/imuser/android/image/2014_01_13/testFtpApache.jpg", false), new FtpResponseListener()
+        {
 
-                    @Override
-                    public void onSuccess()
-                    {
-                        tv_apacheupload.setText("完成==" + "总耗时:" + (System.currentTimeMillis() - time));
-                        pb_apacheupload.setMax(2);
-                        pb_apacheupload.setProgress(2);
-                    }
+            @Override
+            public void onSuccess()
+            {
+                tv_apacheupload.setText("完成==" + "总耗时:" + (System.currentTimeMillis() - time));
+                pb_apacheupload.setMax(2);
+                pb_apacheupload.setProgress(2);
+            }
 
-                    @Override
-                    public void onFailure(Throwable error)
-                    {
-                        error.printStackTrace();
+            @Override
+            public void onFailure(Throwable error)
+            {
+                error.printStackTrace();
 
-                    }
+            }
 
-                    @Override
-                    public void onProgress(int bytesWritten, int bytesTotal, int speed)
-                    {
-                        System.out.println("bytesWritten:" + bytesWritten);
-                        System.out.println("bytesTotal:" + bytesTotal);
-                        System.out.println("currentSpeed:" + speed);
-                        tv_apacheupload.setText(String.valueOf(speed));
-                        pb_apacheupload.setMax(bytesTotal);
-                        pb_apacheupload.setProgress(bytesWritten);
-                    }
-                });
-            task3    .start(false);
+            @Override
+            public void onProgress(int bytesWritten, int bytesTotal, int speed)
+            {
+                System.out.println("bytesWritten:" + bytesWritten);
+                System.out.println("bytesTotal:" + bytesTotal);
+                System.out.println("currentSpeed:" + speed);
+                tv_apacheupload.setText(String.valueOf(speed));
+                pb_apacheupload.setMax(bytesTotal);
+                pb_apacheupload.setProgress(bytesWritten);
+            }
+        });
+        task3.start(false);
 
     }
 
@@ -259,36 +270,35 @@ public class MainActivity extends Activity
         {
         }
 
-        task4=FtpStack.apacheDownload(
-                new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg",
-                        "/var/ftp/imuser/android/image/2014_01_13/1389600666136_0113161137.jpg", false), new FtpResponseListener()
-                {
+        task4 = FtpStack.apacheDownload(new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj"
+                + File.separator + "aa.jpg", "/var/ftp/imuser/android/image/2014_01_13/1389600666136_0113161137.jpg", false), new FtpResponseListener()
+        {
 
-                    @Override
-                    public void onSuccess()
-                    {
-                        tv_apachedownload.setText("完成==" + "总耗时:" + (System.currentTimeMillis() - time));
-                        System.out.println("总耗时:" + (System.currentTimeMillis() - time));
-                        pb_apachedownload.setMax(2);
-                        pb_apachedownload.setProgress(2);
-                    }
+            @Override
+            public void onSuccess()
+            {
+                tv_apachedownload.setText("完成==" + "总耗时:" + (System.currentTimeMillis() - time));
+                System.out.println("总耗时:" + (System.currentTimeMillis() - time));
+                pb_apachedownload.setMax(2);
+                pb_apachedownload.setProgress(2);
+            }
 
-                    @Override
-                    public void onFailure(Throwable error)
-                    {
-                        error.printStackTrace();
+            @Override
+            public void onFailure(Throwable error)
+            {
+                error.printStackTrace();
 
-                    }
+            }
 
-                    @Override
-                    public void onProgress(int bytesWritten, int bytesTotal, int speed)
-                    {
+            @Override
+            public void onProgress(int bytesWritten, int bytesTotal, int speed)
+            {
 
-                        tv_apachedownload.setText(String.valueOf(speed));
-                        pb_apachedownload.setMax(bytesTotal);
-                        pb_apachedownload.setProgress(bytesWritten);
-                    }
-                });
+                tv_apachedownload.setText(String.valueOf(speed));
+                pb_apachedownload.setMax(bytesTotal);
+                pb_apachedownload.setProgress(bytesWritten);
+            }
+        });
         task4.start(false);
 
     }

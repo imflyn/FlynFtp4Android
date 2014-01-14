@@ -260,9 +260,6 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                 } catch (IOException e)
                 {
                     // ingore
-                } finally
-                {
-                    this.ftpClient = null;
                 }
             }
 
