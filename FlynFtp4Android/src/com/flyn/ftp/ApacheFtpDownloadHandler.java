@@ -43,19 +43,18 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
 
             inputStream = new BufferedInputStream(this.ftpClient.retrieveFileStream(this.ftpRequest.getRemoteFilePath()));
             outputStream = new RandomAccessFile(tempFile, "rw");
-
+            this.bytesTotal = (int) ftpFile.getSize();
             if (localFile.exists() && localFile.length() > 0)
             {
-                this.bytesTotal = (int) ftpFile.getSize();
+              
                 this.bytesWritten = (int) tempFile.length();
                 this.ftpClient.setRestartOffset(ftpFile.getSize());
                 outputStream.seek(tempFile.length());
             } else
             {
-                this.bytesTotal = (int) ftpFile.getSize();
                 tempFile.createNewFile();
             }
-
+          
             int count;
             byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
             while ((count = inputStream.read(buffer)) != -1 && !isCancelled())
