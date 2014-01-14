@@ -2,7 +2,6 @@ package com.flyn.sample;
 
 import java.io.File;
 
-import android.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,6 +14,7 @@ import com.flyn.ftp.FtpInfo;
 import com.flyn.ftp.FtpRequest;
 import com.flyn.ftp.FtpResponseListener;
 import com.flyn.ftp.FtpStack;
+import com.flyn.ftp4android.R;
 
 public class MainActivity extends Activity
 {
