@@ -44,8 +44,10 @@ public class FtpTask
 
     public boolean cancel(boolean mayInterruptIfRunning)
     {
+        boolean bol = true;
         FtpDispacther _request = this.ftpDispacther.get();
-        boolean bol = _request.cancel();
+        if (null != _request)
+            bol = _request.cancel();
         if (!this.useSynchronousMode)
             this.future.cancel(mayInterruptIfRunning);
         return bol;

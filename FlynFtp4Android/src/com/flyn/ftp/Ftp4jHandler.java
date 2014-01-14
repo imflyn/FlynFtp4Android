@@ -238,7 +238,6 @@ public abstract class Ftp4jHandler extends IFtpHandler
                 {
                     stopTimer();
                     disconnect();
-
                 }
                 if (retryCount > 0 && (this.ftpResponseListener != null))
                 {
