@@ -61,6 +61,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
         this.ftpClient.setControlKeepAliveTimeout(KEEP_ALIVE_TIMEOUT);
         this.ftpClient.setControlKeepAliveReplyTimeout(CONTROL_KEEP_ALIVE_REPLY_TIMEOUT);
         this.ftpClient.setListHiddenFiles(LIST_HIDDEN);
+        this.ftpClient.setCopyStreamListener(this.copyStreamListener);
         // suppress login details
         this.ftpClient.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out), true));
 
@@ -182,8 +183,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
         }
         if (null != ftpFileName && ftpFileName.length > 0)
             ftpFile = ftpFileName[0];
-        else
-            throw new CustomFtpExcetion("RemoteFile not found.");
+      
 
         return ftpFile;
     }

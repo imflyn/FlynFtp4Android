@@ -35,13 +35,14 @@ public class Ftp4jUploadHandler extends Ftp4jHandler
 
     private void upload() throws CustomFtpExcetion
     {
-        String remoteDirectory = this.ftpRequest.getRemoteFilePath().substring(0, this.ftpRequest.getRemoteFilePath().lastIndexOf("/"));
-        createDirectory(remoteDirectory, null);
-        changeWorkingDirectory(remoteDirectory, null);
 
         File localFile = new File(this.ftpRequest.getLocalFilePath());
         if (!localFile.exists() || localFile.length() <= 0)
             throw new CustomFtpExcetion("LocalFile not found.");
+
+        String remoteDirectory = this.ftpRequest.getRemoteFilePath().substring(0, this.ftpRequest.getRemoteFilePath().lastIndexOf("/"));
+        createDirectory(remoteDirectory, null);
+        changeWorkingDirectory(remoteDirectory, null);
 
         FTPFile ftpFile = getRemoteFile(this.ftpRequest.getRemoteFilePath(), null);
         if (null != ftpFile && ftpFile.getSize() >= localFile.length())
@@ -49,30 +50,12 @@ public class Ftp4jUploadHandler extends Ftp4jHandler
 
         try
         {
-            // if (null != ftpFile && ftpFile.getSize() < localFile.length())
-            // {
-            // this.bytesTotal = (int) (localFile.length() - ftpFile.getSize());
-            // this.ftpClient.upload(localFile, ftpFile.getSize(),
-            // this.ftpDataTransferListener);
-            // } else
-            // {
-            // this.bytesTotal = (int) localFile.length();
-            // this.ftpClient.upload(localFile, this.ftpDataTransferListener);
-            //
-            // int index = this.ftpRequest.getRemoteFilePath().lastIndexOf("/");
-            // String newname = remoteDirectory +
-            // this.ftpRequest.getRemoteFilePath().substring(index,
-            // this.ftpRequest.getRemoteFilePath().length());
-            // String oldname = remoteDirectory + File.separator +
-            // localFile.getName();
-            //
-            // this.ftpClient.rename(oldname, newname);
-            // }
 
             if (null != ftpFile && ftpFile.getSize() < localFile.length())
             {
                 this.bytesTotal = (int) (localFile.length() - ftpFile.getSize());
-                this.ftpClient.upload(this.ftpRequest.getRemoteFilePath(), new FileInputStream(localFile), ftpFile.getSize(), ftpFile.getSize(), this.ftpDataTransferListener);
+                this.ftpClient.upload(this.ftpRequest.getRemoteFilePath(), new BufferedInputStream(new FileInputStream(localFile), 4096), ftpFile.getSize(), ftpFile.getSize(),
+                        this.ftpDataTransferListener);
 
             } else
             {

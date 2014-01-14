@@ -39,6 +39,9 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
     private void download() throws CustomFtpExcetion
     {
         FTPFile ftpFile = getRemoteFile(this.ftpRequest.getRemoteFilePath(), null);
+        
+        if(null==ftpFile||ftpFile.getSize()<=0)
+            throw new CustomFtpExcetion("RemoteFile not found.");
 
         File localFile = new File(this.ftpRequest.getLocalFilePath());
         File tempFile = new File(this.ftpRequest.getLocalFilePath().substring(0, this.ftpRequest.getLocalFilePath().lastIndexOf(".")) + ".tmp");
@@ -66,7 +69,8 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
             }
 
             result = this.ftpClient.retrieveFile(this.ftpRequest.getRemoteFilePath(), new BufferedOutputStream(new FileOutputStream(tempFile), DEFAULT_BUFFER_SIZE));
-
+            
+            tempFile.renameTo(localFile);
         } catch (FileNotFoundException e)
         {
             throw new CustomFtpExcetion(e);

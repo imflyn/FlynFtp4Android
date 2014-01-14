@@ -97,7 +97,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignRight="@+id/btn_apacheupload"
         android:layout_below="@+id/btn_apacheupload"
-        android:text="apache上传" />
+        android:text="apache下载" />
 
     <ProgressBar
         android:id="@+id/pb_apachedownload"

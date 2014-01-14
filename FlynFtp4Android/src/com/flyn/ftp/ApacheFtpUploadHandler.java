@@ -35,13 +35,15 @@ public class ApacheFtpUploadHandler extends ApacheFtpHandler
 
     private void upload() throws CustomFtpExcetion
     {
-        String remoteDirectory = this.ftpRequest.getRemoteFilePath().substring(0, this.ftpRequest.getRemoteFilePath().lastIndexOf("/"));
-        createDirectory(remoteDirectory, null);
-        changeWorkingDirectory(remoteDirectory, null);
+        
 
         File localFile = new File(this.ftpRequest.getLocalFilePath());
         if (!localFile.exists() || localFile.length() <= 0)
             throw new CustomFtpExcetion("LocalFile not found.");
+        
+        String remoteDirectory = this.ftpRequest.getRemoteFilePath().substring(0, this.ftpRequest.getRemoteFilePath().lastIndexOf("/"));
+        createDirectory(remoteDirectory, null);
+        changeWorkingDirectory(remoteDirectory, null);
 
         FTPFile ftpFile = getRemoteFile(this.ftpRequest.getRemoteFilePath(), null);
         if (null != ftpFile && ftpFile.getSize() >= localFile.length())

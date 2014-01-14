@@ -128,7 +128,7 @@ public class MainActivity extends Activity
                     @Override
                     public void onSuccess()
                     {
-                        tv_4jupload.setText("完成");
+                        tv_4jupload.setText("完成==" + "总耗时:" + (System.currentTimeMillis() - time));
                         System.out.println("总耗时:" + (System.currentTimeMillis() - time));
                         pb_4jupload.setMax(2);
                         pb_4jupload.setProgress(2);
@@ -144,9 +144,6 @@ public class MainActivity extends Activity
                     @Override
                     public void onProgress(int bytesWritten, int bytesTotal, int speed)
                     {
-                        System.out.println("bytesWritten:" + bytesWritten);
-                        System.out.println("bytesTotal:" + bytesTotal);
-                        System.out.println("currentSpeed:" + speed);
                         tv_4jupload.setText(String.valueOf(speed));
                         pb_4jupload.setMax(bytesTotal);
                         pb_4jupload.setProgress(bytesWritten);
@@ -174,8 +171,7 @@ public class MainActivity extends Activity
                     @Override
                     public void onSuccess()
                     {
-                        tv_4jdownload.setText("完成");
-                        System.out.println("总耗时:" + (System.currentTimeMillis() - time));
+                        tv_4jdownload.setText("完成===" + "总耗时:" + (System.currentTimeMillis() - time));
                         pb_4jdownload.setMax(2);
                         pb_4jdownload.setProgress(2);
                     }
@@ -204,7 +200,7 @@ public class MainActivity extends Activity
         final long time = System.currentTimeMillis();
         FtpStack.apacheUpload(
                 new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg",
-                        "/var/ftp/imuser/android/image/2014_01_13/testFtp4j.jpg", false), new FtpResponseListener()
+                        "/var/ftp/imuser/android/image/2014_01_13/testFtpApache.jpg", false), new FtpResponseListener()
                 {
 
                     @Override
