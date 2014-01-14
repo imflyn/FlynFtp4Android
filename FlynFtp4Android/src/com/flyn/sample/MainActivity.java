@@ -28,7 +28,7 @@ public class MainActivity extends Activity
     private TextView    tv_apachedownload;
     private ProgressBar pb_apacheupload;
     private ProgressBar pb_apachedownload;
-
+  
     private FtpTask     task1;
     private FtpTask     task2;
     private FtpTask     task3;

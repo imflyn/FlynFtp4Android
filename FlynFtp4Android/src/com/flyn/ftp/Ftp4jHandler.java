@@ -197,10 +197,7 @@ public abstract class Ftp4jHandler extends IFtpHandler
             } catch (FTPException e)
             {
                 Log.e(TAG, "disconnect error FTPException", e);
-            } finally
-            {
-                this.ftpClient = null;
-            }
+            } 
         }
     }
 
@@ -333,7 +330,7 @@ public abstract class Ftp4jHandler extends IFtpHandler
             public void run()
             {
                 if (isScheduleing && !Thread.currentThread().isInterrupted())
-                {
+                { 
                     long nowTime = System.currentTimeMillis();
                     long spendTime = nowTime - timeStamp;
                     timeStamp = nowTime;
@@ -353,7 +350,7 @@ public abstract class Ftp4jHandler extends IFtpHandler
                 }
             }
         };
-        this.timer.schedule(task, 100, 1000);
+        this.timer.schedule(task, 200, 1500);
     }
 
     private void stopTimer()

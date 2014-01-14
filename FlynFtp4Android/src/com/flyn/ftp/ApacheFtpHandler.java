@@ -412,7 +412,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                 }
             }
         };
-        this.timer.schedule(task, 300, 1000);
+        this.timer.schedule(task, 200, 1500);
     }
 
     private void stopTimer()
