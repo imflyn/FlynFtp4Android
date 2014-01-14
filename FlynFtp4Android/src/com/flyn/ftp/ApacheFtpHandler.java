@@ -360,6 +360,15 @@ public abstract class ApacheFtpHandler extends IFtpHandler
     protected final boolean cancel()
     {
         this.isCancelled = true;
+        try
+        {
+            this.ftpClient.abort();
+        } catch (IOException e)
+        {
+        } finally
+        {
+            disconnect();
+        }
         return isCancelled();
     }
 

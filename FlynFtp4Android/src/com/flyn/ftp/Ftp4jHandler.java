@@ -179,7 +179,7 @@ public abstract class Ftp4jHandler extends IFtpHandler
 
     protected void disconnect()
     {
-        if (null != this.ftpClient )
+        if (null != this.ftpClient)
         {
             try
             {
@@ -237,11 +237,11 @@ public abstract class Ftp4jHandler extends IFtpHandler
                     if (isCancelled())
                         return;
                     cause = e;
-                }
-                finally
-                { stopTimer();
+                } finally
+                {
+                    stopTimer();
                     disconnect();
-                   
+
                 }
                 if (retryCount > 0 && (this.ftpResponseListener != null))
                 {
@@ -296,6 +296,17 @@ public abstract class Ftp4jHandler extends IFtpHandler
     protected final boolean cancel()
     {
         this.isCancelled = true;
+        try
+        {
+            this.ftpClient.abortCurrentDataTransfer(true);
+        } catch (FTPIllegalReplyException e)
+        {
+        } catch (IOException e)
+        {
+        } finally
+        {
+            disconnect();
+        }
         return isCancelled();
     }
 
