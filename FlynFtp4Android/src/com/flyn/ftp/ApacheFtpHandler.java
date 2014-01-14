@@ -27,6 +27,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
     private static final String   DEFAULT_CHARSET                  = "utf-8";
     private static final boolean  LIST_HIDDEN                      = false;
     private static final int      TRANSFER_TYPE                    = FTP.BINARY_FILE_TYPE;
+    private static final int      FILE_TRANSFER_MODE               = FTP.BINARY_FILE_TYPE;
 
     protected FtpResponseListener ftpResponseListener;
     protected FtpRequest          ftpRequest;
@@ -106,6 +107,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
 
                 // settings
                 this.ftpClient.setFileType(TRANSFER_TYPE);
+                this.ftpClient.setFileTransferMode(FILE_TRANSFER_MODE);
                 this.ftpClient.enterLocalPassiveMode();
                 this.ftpClient.setTcpNoDelay(true);
                 this.ftpClient.setBufferSize(DEFAULT_BUFFER_SIZE);
@@ -333,7 +335,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
     {
         return isCancelled() || this.isFinished;
     }
- 
+
     @Override
     protected final boolean isCancelled()
     {

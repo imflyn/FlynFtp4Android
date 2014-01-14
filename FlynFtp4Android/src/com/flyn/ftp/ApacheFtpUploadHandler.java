@@ -1,6 +1,7 @@
 package com.flyn.ftp;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -45,28 +46,30 @@ public class ApacheFtpUploadHandler extends ApacheFtpHandler
 
                 this.bytesTotal = (int) localFile.length();
                 this.bytesWritten = (int) ftpFile.getSize();
-                this.ftpClient.setRestartOffset(ftpFile.getSize());
+              
 
-//                outputStream = new BufferedOutputStream(this.ftpClient.appendFileStream(this.ftpRequest.getRemoteFilePath()));
-//                inputStream.skip(ftpFile.getSize());
-                this.ftpClient.appendFile(this.ftpRequest.getRemoteFilePath(), inputStream);
+                outputStream = new BufferedOutputStream(this.ftpClient.appendFileStream(this.ftpRequest.getRemoteFilePath()));
+                inputStream.skip(ftpFile.getSize());
+                this.ftpClient.setRestartOffset(ftpFile.getSize());
+                
+//              this.ftpClient.appendFile(this.ftpRequest.getRemoteFilePath(), inputStream);
                 
             } else
             {
                 this.bytesTotal = (int) localFile.length();
-//                outputStream = new BufferedOutputStream(this.ftpClient.storeFileStream(this.ftpRequest.getRemoteFilePath()));
+                outputStream = new BufferedOutputStream(this.ftpClient.storeFileStream(this.ftpRequest.getRemoteFilePath()));
                 
-                this.ftpClient.storeFile(this.ftpRequest.getRemoteFilePath(), inputStream);
+//                this.ftpClient.storeFile(this.ftpRequest.getRemoteFilePath(), inputStream);
 
             }
 
-//            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-//            int count;
-//            while ((count = inputStream.read(buffer)) != -1)
-//            {
-//                outputStream.write(buffer, 0, count);
-//                updateProgress(count);
-//            }
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+            int count;
+            while ((count = inputStream.read(buffer)) != -1)
+            {
+                outputStream.write(buffer, 0, count);
+                updateProgress(count);
+            }
 
         } catch (FileNotFoundException e)
         {
