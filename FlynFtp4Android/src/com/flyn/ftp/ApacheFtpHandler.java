@@ -10,6 +10,7 @@ import java.util.TimerTask;
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPListParseEngine;
 import org.apache.commons.net.ftp.FTPReply;
@@ -22,8 +23,8 @@ public abstract class ApacheFtpHandler extends IFtpHandler
 
     protected static final int    DEFAULT_BUFFER_SIZE              = 8 * 1024;
     private static final int      DEFAULT_RETRY_COUNT              = 3;
-    private static final int      KEEP_ALIVE_TIMEOUT               = -1;
-    private static final int      CONTROL_KEEP_ALIVE_REPLY_TIMEOUT = -1;
+    private static final int      KEEP_ALIVE_TIMEOUT               = 30;
+    private static final int      CONTROL_KEEP_ALIVE_REPLY_TIMEOUT = 30;
     private static final String   DEFAULT_CHARSET                  = "utf-8";
     private static final boolean  LIST_HIDDEN                      = false;
     private static final int      TRANSFER_TYPE                    = FTP.BINARY_FILE_TYPE;
@@ -109,13 +110,12 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                 this.ftpClient.setFileType(TRANSFER_TYPE);
                 this.ftpClient.setFileTransferMode(FILE_TRANSFER_MODE);
                 this.ftpClient.enterLocalPassiveMode();
-                this.ftpClient.setTcpNoDelay(true);
                 this.ftpClient.setBufferSize(DEFAULT_BUFFER_SIZE);
                 this.ftpClient.setReceiveBufferSize(DEFAULT_BUFFER_SIZE);
 
-                // FTPClientConfig config = new FTPClientConfig();
-                // config.setLenientFutureDates(true);
-                // this.ftpClient.configure(config);
+                FTPClientConfig config = new FTPClientConfig();
+                config.setLenientFutureDates(true);
+                this.ftpClient.configure(config);
 
             }
         } catch (IOException e)
@@ -243,11 +243,10 @@ public abstract class ApacheFtpHandler extends IFtpHandler
 
     protected void disconnect()
     {
-        if (null != this.ftpClient && this.ftpClient.isConnected())
+        if (null != this.ftpClient)
         {
             try
             {
-                this.ftpClient.noop();
                 this.ftpClient.logout();
             } catch (IOException e)
             {
@@ -256,7 +255,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
             {
                 try
                 {
-                    if (null != this.ftpClient && this.ftpClient.isConnected())
+                    if (null != this.ftpClient)
                         this.ftpClient.disconnect();
                 } catch (IOException e)
                 {
@@ -303,6 +302,10 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                     if (isCancelled())
                         return;
                     cause = e;
+                } finally
+                {
+                    stopTimer();
+                    disconnect();
                 }
                 if (retryCount > 0 && (this.ftpResponseListener != null))
                 {
@@ -315,8 +318,6 @@ public abstract class ApacheFtpHandler extends IFtpHandler
             cause = e;
         } finally
         {
-            disconnect();
-            stopTimer();
             this.isFinished = true;
             if (null != this.ftpResponseListener)
                 this.ftpResponseListener.sendFinishMessage();

@@ -73,11 +73,6 @@ public abstract class Ftp4jHandler extends IFtpHandler
             try
             {
                 this.ftpClient.connect(this.ftpRequest.getFtpInfo().getHost(), this.ftpRequest.getFtpInfo().getPort());
-                // unuseful
-                // for (int i = 0; i < replyCode.length; i++)
-                // {
-                // Log.i(TAG, "Connect replyCode:".concat(replyCode[0]));
-                // }
                 return true;
             } catch (IllegalStateException e)
             {
@@ -184,7 +179,7 @@ public abstract class Ftp4jHandler extends IFtpHandler
 
     protected void disconnect()
     {
-        if (null != this.ftpClient && this.ftpClient.isConnected())
+        if (null != this.ftpClient )
         {
             try
             {
@@ -243,6 +238,11 @@ public abstract class Ftp4jHandler extends IFtpHandler
                         return;
                     cause = e;
                 }
+                finally
+                { stopTimer();
+                    disconnect();
+                   
+                }
                 if (retryCount > 0 && (this.ftpResponseListener != null))
                 {
                     this.ftpResponseListener.sendRetryMessage(this.executionCount);
@@ -254,8 +254,6 @@ public abstract class Ftp4jHandler extends IFtpHandler
             cause = e;
         } finally
         {
-            disconnect();
-            stopTimer();
             this.isFinished = true;
             if (null != this.ftpResponseListener)
                 this.ftpResponseListener.sendFinishMessage();

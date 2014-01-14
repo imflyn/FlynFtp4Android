@@ -46,20 +46,21 @@ public class ApacheFtpUploadHandler extends ApacheFtpHandler
 
                 this.bytesTotal = (int) localFile.length();
                 this.bytesWritten = (int) ftpFile.getSize();
-              
 
                 outputStream = new BufferedOutputStream(this.ftpClient.appendFileStream(this.ftpRequest.getRemoteFilePath()));
                 inputStream.skip(ftpFile.getSize());
                 this.ftpClient.setRestartOffset(ftpFile.getSize());
-                
-//              this.ftpClient.appendFile(this.ftpRequest.getRemoteFilePath(), inputStream);
-                
+
+                // this.ftpClient.appendFile(this.ftpRequest.getRemoteFilePath(),
+                // inputStream);
+
             } else
             {
                 this.bytesTotal = (int) localFile.length();
                 outputStream = new BufferedOutputStream(this.ftpClient.storeFileStream(this.ftpRequest.getRemoteFilePath()));
-                
-//                this.ftpClient.storeFile(this.ftpRequest.getRemoteFilePath(), inputStream);
+
+                // this.ftpClient.storeFile(this.ftpRequest.getRemoteFilePath(),
+                // inputStream);
 
             }
 
