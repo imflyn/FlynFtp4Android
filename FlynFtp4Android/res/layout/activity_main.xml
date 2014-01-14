@@ -8,72 +8,96 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
+    <ProgressBar
+        android:id="@+id/pb_apachedownload"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="70dip"
+        android:layout_alignRight="@+id/tb_apachedownload"
+        android:layout_below="@+id/bp_ftp4jupload"
+        android:layout_marginTop="85dp" />
+
+    <ProgressBar
+        android:id="@+id/pb_apacheupload"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="70dip"
+        android:layout_alignTop="@+id/pb_apachedownload" />
+
+    <TextView
+        android:id="@+id/tb_apachedownload"
+        android:layout_width="150dip"
+        android:layout_height="20dip"
+        android:layout_above="@+id/pb_ftp4jdownload"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="38dp"
+        android:gravity="right"
+        android:text="apachedownload" />
+
+    <TextView
+        android:id="@+id/tv_apacheupload"
+        android:layout_width="100dip"
+        android:layout_height="20dip"
+        android:layout_above="@+id/tb_apachedownload"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="30dp"
+        android:gravity="right"
+        android:text="apacheupload" />
+
+    <TextView
+        android:id="@+id/tv_ftp4jdownload"
+        android:layout_width="100dip"
+        android:layout_height="20dip"
+        android:layout_above="@+id/tv_apacheupload"
+        android:layout_alignParentLeft="true"
+        android:gravity="right"
+        android:text="4jdownload" />
+
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/tv_ftp4jupload"
         android:layout_width="wrap_content"
         android:layout_height="70dip"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="上传" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="70dip"
-        android:layout_below="@+id/button1"
-        android:text="下载" />
+        android:text="Ftp4j上传" />
 
     <ProgressBar
-        android:id="@+id/progressBar1"
+        android:id="@+id/pb_ftp4jdownload"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="70dip"
-        android:layout_alignBottom="@+id/button1"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/button1"
-        android:layout_toRightOf="@+id/button1" />
+        android:layout_above="@+id/bp_ftp4jupload"
+        android:layout_toRightOf="@+id/btn_ftp4jdownload" />
+
+    <Button
+        android:id="@+id/btn_ftp4jdownload"
+        android:layout_width="wrap_content"
+        android:layout_height="70dip"
+        android:layout_toLeftOf="@+id/pb_apachedownload"
+        android:text="Ftp4j下载" />
+
+    <Button
+        android:id="@+id/btn_apacheupload"
+        android:layout_width="wrap_content"
+        android:layout_height="70dip"
+        android:layout_alignLeft="@+id/btn_ftp4jdownload"
+        android:layout_below="@+id/bp_ftp4jupload"
+        android:text="apache上传" />
+
+    <Button
+        android:id="@+id/btn_apachedownload"
+        android:layout_width="wrap_content"
+        android:layout_height="70dip"
+        android:layout_alignLeft="@+id/btn_apacheupload"
+        android:layout_below="@+id/btn_apacheupload"
+        android:text="apache下载" />
 
     <ProgressBar
-        android:id="@+id/progressBar2"
+        android:id="@+id/bp_ftp4jupload"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
-        android:layout_height="70dip"
-        android:layout_alignBottom="@+id/button2"
-        android:layout_alignRight="@+id/progressBar1"
-        android:layout_alignTop="@+id/button2"
-        android:layout_toRightOf="@+id/button2" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="70dip"
-        android:layout_alignRight="@+id/progressBar1"
-        android:layout_alignTop="@+id/progressBar1"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="70dip"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_alignTop="@+id/progressBar2"
-        android:text="TextView" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="垃圾下载" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button3"
-        android:layout_alignBottom="@+id/button3"
-        android:layout_alignRight="@+id/progressBar2"
-        android:text="垃圾上传" />
+        android:layout_height="40dip"
+        android:layout_above="@+id/btn_ftp4jdownload"
+        android:layout_alignParentRight="true" />
 
 </RelativeLayout>

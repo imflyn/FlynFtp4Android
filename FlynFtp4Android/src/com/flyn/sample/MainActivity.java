@@ -19,22 +19,22 @@ import com.flyn.ftp4android.R;
 public class MainActivity extends Activity
 {
 
-    private TextView    upload;
-    private TextView    download;
-    private ProgressBar uploadPb;
-    private ProgressBar downPb;
+    private TextView    tv_4jupload;
+    private TextView    tv_4jdownload;
+    private ProgressBar pb_4jupload;
+    private ProgressBar pb_4jdownload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        upload = (TextView) findViewById(R.id.textView1);
-        download = (TextView) findViewById(R.id.textView2);
-        uploadPb = (ProgressBar) findViewById(R.id.progressBar1);
-        downPb = (ProgressBar) findViewById(R.id.progressBar2);
+        tv_4jupload = (TextView) findViewById(R.id.tv_ftp4jupload);
+        tv_4jdownload = (TextView) findViewById(R.id.tv_ftp4jdownload);
+        pb_4jupload = (ProgressBar) findViewById(R.id.bp_ftp4jupload);
+        pb_4jdownload = (ProgressBar) findViewById(R.id.pb_ftp4jdownload);
 
-        findViewById(R.id.button1).setOnClickListener(new OnClickListener()
+        findViewById(R.id.tv_ftp4jupload).setOnClickListener(new OnClickListener()
         {
 
             @Override
@@ -53,7 +53,7 @@ public class MainActivity extends Activity
             }
         });
 
-        findViewById(R.id.button2).setOnClickListener(new OnClickListener()
+        findViewById(R.id.tv_ftp4jdownload).setOnClickListener(new OnClickListener()
         {
 
             @Override
@@ -65,45 +65,12 @@ public class MainActivity extends Activity
                     @Override
                     public void run()
                     {
-                        download();
+                        tv_4jdownload();
                     }
                 }).start();
             }
         });
 
-        findViewById(R.id.button3).setOnClickListener(new OnClickListener()
-        {
-
-            @Override
-            public void onClick(View v)
-            {
-                new Thread(new Runnable()
-                {
-
-                    @Override
-                    public void run()
-                    {
-                    }
-                }).start();
-            }
-        });
-
-        findViewById(R.id.button4).setOnClickListener(new OnClickListener()
-        {
-
-            @Override
-            public void onClick(View v)
-            {
-                new Thread(new Runnable()
-                {
-
-                    @Override
-                    public void run()
-                    {
-                    }
-                }).start();
-            }
-        });
     }
 
     private void upload()
@@ -117,10 +84,10 @@ public class MainActivity extends Activity
                     @Override
                     public void onSuccess()
                     {
-                        upload.setText("完成");
+                        tv_4jupload.setText("完成");
                         System.out.println("总耗时:" + (System.currentTimeMillis() - time));
-                        uploadPb.setMax(2);
-                        uploadPb.setProgress(2);
+                        pb_4jupload.setMax(2);
+                        pb_4jupload.setProgress(2);
                     }
 
                     @Override
@@ -136,15 +103,15 @@ public class MainActivity extends Activity
                         System.out.println("bytesWritten:" + bytesWritten);
                         System.out.println("bytesTotal:" + bytesTotal);
                         System.out.println("currentSpeed:" + speed);
-                        upload.setText(String.valueOf(speed));
-                        uploadPb.setMax(bytesTotal);
-                        uploadPb.setProgress(bytesWritten);
+                        tv_4jupload.setText(String.valueOf(speed));
+                        pb_4jupload.setMax(bytesTotal);
+                        pb_4jupload.setProgress(bytesWritten);
                     }
                 }).start(false);
 
     }
 
-    private void download()
+    private void tv_4jdownload()
     {
         final long time = System.currentTimeMillis();
         try
@@ -163,10 +130,10 @@ public class MainActivity extends Activity
                     @Override
                     public void onSuccess()
                     {
-                        download.setText("完成");
+                        tv_4jdownload.setText("完成");
                         System.out.println("总耗时:" + (System.currentTimeMillis() - time));
-                        downPb.setMax(2);
-                        downPb.setProgress(2);
+                        pb_4jdownload.setMax(2);
+                        pb_4jdownload.setProgress(2);
                     }
 
                     @Override
@@ -180,9 +147,9 @@ public class MainActivity extends Activity
                     public void onProgress(int bytesWritten, int bytesTotal, int speed)
                     {
 
-                        download.setText(String.valueOf(speed));
-                        downPb.setMax(bytesTotal);
-                        downPb.setProgress(bytesWritten);
+                        tv_4jdownload.setText(String.valueOf(speed));
+                        pb_4jdownload.setMax(bytesTotal);
+                        pb_4jdownload.setProgress(bytesWritten);
                     }
                 }).start(false);
 
