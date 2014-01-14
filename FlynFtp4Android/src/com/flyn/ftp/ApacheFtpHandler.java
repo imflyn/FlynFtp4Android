@@ -10,8 +10,8 @@ import java.util.TimerTask;
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPListParseEngine;
 import org.apache.commons.net.ftp.FTPReply;
 
 import android.util.Log;
@@ -111,9 +111,9 @@ public abstract class ApacheFtpHandler extends IFtpHandler
                 this.ftpClient.setBufferSize(DEFAULT_BUFFER_SIZE);
                 this.ftpClient.setReceiveBufferSize(DEFAULT_BUFFER_SIZE);
 
-                FTPClientConfig config = new FTPClientConfig();
-                config.setLenientFutureDates(true);
-                this.ftpClient.configure(config);
+                // FTPClientConfig config = new FTPClientConfig();
+                // config.setLenientFutureDates(true);
+                // this.ftpClient.configure(config);
 
             }
         } catch (IOException e)
@@ -131,7 +131,16 @@ public abstract class ApacheFtpHandler extends IFtpHandler
         FTPFile[] ftpFileName = null;
         try
         {
-            ftpFileName = this.ftpClient.listFiles(new String(remotePath.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
+            FTPListParseEngine engine = this.ftpClient.initiateListParsing(new String(remotePath.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
+
+            if (engine.hasNext())
+            {
+                ftpFileName = engine.getNext(1);
+            }
+
+            // ftpFileName = this.ftpClient.listFiles(new
+            // String(remotePath.getBytes(), charset == null ? DEFAULT_CHARSET :
+            // charset));
         } catch (UnsupportedEncodingException e)
         {
             throw new CustomFtpExcetion(e);
@@ -150,7 +159,15 @@ public abstract class ApacheFtpHandler extends IFtpHandler
         FTPFile[] ftpFileName = null;
         try
         {
-            ftpFileName = this.ftpClient.listDirectories(new String(remotePath.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
+            FTPListParseEngine engine = this.ftpClient.initiateListParsing(new String(remotePath.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
+
+            if (engine.hasNext())
+            {
+                ftpFileName = engine.getNext(1);
+            }
+            // ftpFileName = this.ftpClient.listDirectories(new
+            // String(remotePath.getBytes(), charset == null ? DEFAULT_CHARSET :
+            // charset));
         } catch (UnsupportedEncodingException e)
         {
             throw new CustomFtpExcetion(e);
@@ -170,7 +187,16 @@ public abstract class ApacheFtpHandler extends IFtpHandler
         FTPFile[] ftpFileName = null;
         try
         {
-            ftpFileName = this.ftpClient.listFiles(new String(remotePath.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
+            FTPListParseEngine engine = this.ftpClient.initiateListParsing(new String(remotePath.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
+
+            if (engine.hasNext())
+            {
+                ftpFileName = engine.getNext(1);
+            }
+
+            // ftpFileName = this.ftpClient.listFiles(new
+            // String(remotePath.getBytes(), charset == null ? DEFAULT_CHARSET :
+            // charset));
         } catch (UnsupportedEncodingException e)
         {
             throw new CustomFtpExcetion(e);
@@ -307,7 +333,7 @@ public abstract class ApacheFtpHandler extends IFtpHandler
     {
         return isCancelled() || this.isFinished;
     }
-
+ 
     @Override
     protected final boolean isCancelled()
     {

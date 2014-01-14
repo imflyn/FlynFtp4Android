@@ -36,7 +36,7 @@ public class Ftp4jDownloadHandler extends Ftp4jHandler
         {
             if (localFile.exists() && localFile.length() > 0)
             {
-                this.bytesTotal = (int) (ftpFile.getSize() - tempFile.length());
+                this.bytesTotal = (int) ftpFile.getSize();
                 this.bytesWritten = (int) tempFile.length();
                 this.ftpClient.download(this.ftpRequest.getRemoteFilePath(), localFile, tempFile.length(), this.ftpDataTransferListener);
             } else

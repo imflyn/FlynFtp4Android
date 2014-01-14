@@ -46,7 +46,7 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
 
             if (localFile.exists() && localFile.length() > 0)
             {
-                this.bytesTotal = (int) (ftpFile.getSize() - tempFile.length());
+                this.bytesTotal = (int) ftpFile.getSize();
                 this.bytesWritten = (int) tempFile.length();
                 this.ftpClient.setRestartOffset(ftpFile.getSize());
                 outputStream.seek(tempFile.length());
@@ -63,7 +63,7 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
                 outputStream.write(buffer, 0, count);
                 updateProgress(count);
             }
-            
+
             tempFile.renameTo(localFile);
         } catch (FileNotFoundException e)
         {
