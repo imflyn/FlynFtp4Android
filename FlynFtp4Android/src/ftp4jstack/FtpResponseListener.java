@@ -147,7 +147,7 @@ public abstract class FtpResponseListener implements Listener
             case FAILURE_MESSAGE:
                 messageData = (Object[]) msg.obj;
                 if (messageData != null && messageData.length == 1)
-                   onFailure((Throwable)messageData[0]);
+                    onFailure((Throwable) messageData[0]);
                 else
                     Log.e(TAG, "FAILURE_MESSAGE didn't get enough params.");
                 break;

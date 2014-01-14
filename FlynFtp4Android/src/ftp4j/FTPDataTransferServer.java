@@ -162,6 +162,7 @@ class FTPDataTransferServer implements FTPDataTransferConnectionProvider, Runnab
         return serverSocket.getLocalPort();
     }
 
+    @Override
     public void run()
     {
         int timeout = 30000;
@@ -215,6 +216,7 @@ class FTPDataTransferServer implements FTPDataTransferConnectionProvider, Runnab
     /**
      * Disposes the server and interrupts every operating stream.
      */
+    @Override
     public void dispose()
     {
         // Close the server socket (if open).
@@ -230,6 +232,7 @@ class FTPDataTransferServer implements FTPDataTransferConnectionProvider, Runnab
         }
     }
 
+    @Override
     public Socket openDataTransferConnection() throws FTPDataTransferException
     {
         if (socket == null && exception == null)

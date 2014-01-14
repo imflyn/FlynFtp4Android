@@ -12,6 +12,6 @@ public interface FtpStatus
     int LOCAL_FILE_NOTEXISTS  = 7;
     int DOWNLOAD_SUCCESS      = 8;
     int DOWNLOAD_FAILURE      = 9;
-    int UPLOAD_SUCCESS      = 8;
-    int UPLOAD_FAILURE      = 9;
+    int UPLOAD_SUCCESS        = 8;
+    int UPLOAD_FAILURE        = 9;
 }

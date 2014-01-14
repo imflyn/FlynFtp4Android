@@ -14,6 +14,7 @@ public class CustomFtpExcetion extends Exception
     {
         super(cause);
     }
+
     public CustomFtpExcetion(String exceptionMessage)
     {
         super(exceptionMessage);

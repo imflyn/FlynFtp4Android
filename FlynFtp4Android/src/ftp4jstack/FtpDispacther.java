@@ -3,9 +3,9 @@ package ftp4jstack;
 public class FtpDispacther implements Runnable
 {
 
-    private FtpHandler ftpHandler;
+    private IFtpHandler ftpHandler;
 
-    protected FtpDispacther(FtpHandler ftpHandler)
+    protected FtpDispacther(IFtpHandler ftpHandler)
     {
         this.ftpHandler = ftpHandler;
     }

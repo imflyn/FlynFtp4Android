@@ -130,6 +130,7 @@ public class ParametricTextualExtensionRecognizer implements FTPTextualExtension
         }
     }
 
+    @Override
     public boolean isTextualExt(String ext)
     {
         synchronized (exts)

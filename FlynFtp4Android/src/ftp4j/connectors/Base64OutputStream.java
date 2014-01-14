@@ -105,6 +105,7 @@ class Base64OutputStream extends OutputStream
         this.linelength = wrapAt;
     }
 
+    @Override
     public void write(int b) throws IOException
     {
         int value = (b & 0xFF) << (16 - (bytecounter * 8));
@@ -116,6 +117,7 @@ class Base64OutputStream extends OutputStream
         }
     }
 
+    @Override
     public void close() throws IOException
     {
         commit();

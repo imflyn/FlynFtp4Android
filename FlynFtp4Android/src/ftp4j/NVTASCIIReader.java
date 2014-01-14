@@ -63,6 +63,7 @@ class NVTASCIIReader extends Reader
         reader = new InputStreamReader(stream, charsetName);
     }
 
+    @Override
     public void close() throws IOException
     {
         synchronized (this)
@@ -71,6 +72,7 @@ class NVTASCIIReader extends Reader
         }
     }
 
+    @Override
     public int read(char[] cbuf, int off, int len) throws IOException
     {
         synchronized (this)

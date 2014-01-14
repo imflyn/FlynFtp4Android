@@ -56,5 +56,4 @@ public class FtpRequest
         this.ifRetry = ifRetry;
     }
 
-    
 }

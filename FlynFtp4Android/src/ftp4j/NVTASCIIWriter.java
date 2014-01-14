@@ -69,6 +69,7 @@ class NVTASCIIWriter extends Writer
      * 
      * @throws IOException
      */
+    @Override
     public void close() throws IOException
     {
         synchronized (this)
@@ -77,6 +78,7 @@ class NVTASCIIWriter extends Writer
         }
     }
 
+    @Override
     public void flush() throws IOException
     {
         synchronized (this)
@@ -85,6 +87,7 @@ class NVTASCIIWriter extends Writer
         }
     }
 
+    @Override
     public void write(char[] cbuf, int off, int len) throws IOException
     {
         synchronized (this)

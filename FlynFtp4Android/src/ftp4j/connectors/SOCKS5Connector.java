@@ -311,11 +311,13 @@ public class SOCKS5Connector extends FTPConnector
         return aux;
     }
 
+    @Override
     public Socket connectForCommunicationChannel(String host, int port) throws IOException
     {
         return socksConnect(host, port, false);
     }
 
+    @Override
     public Socket connectForDataTransferChannel(String host, int port) throws IOException
     {
         return socksConnect(host, port, true);

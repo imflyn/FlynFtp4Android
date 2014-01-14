@@ -160,7 +160,7 @@ public class MainActivity extends Activity
     private void upload()
     {
         final long time = System.currentTimeMillis();
-        FtpStack.upload(
+        FtpStack.ftp4jUpload(
                 new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg",
                         "/var/ftp/imuser/android/image/2014_01_13/testFtp4j.jpg", false), new FtpResponseListener()
                 {
@@ -184,9 +184,9 @@ public class MainActivity extends Activity
                     @Override
                     public void onProgress(int bytesWritten, int bytesTotal, int speed)
                     {
-                        System.out.println("bytesWritten:"+bytesWritten);
-                        System.out.println("bytesTotal:"+bytesTotal);
-                        System.out.println("currentSpeed:"+speed);
+                        System.out.println("bytesWritten:" + bytesWritten);
+                        System.out.println("bytesTotal:" + bytesTotal);
+                        System.out.println("currentSpeed:" + speed);
                         upload.setText(String.valueOf(speed));
                         uploadPb.setMax(bytesTotal);
                         uploadPb.setProgress(bytesWritten);
@@ -206,7 +206,7 @@ public class MainActivity extends Activity
         {
         }
 
-        FtpStack.download(
+        FtpStack.ftp4jDownload(
                 new FtpRequest(new FtpInfo("ftp.talkingoa.com", 21, "imuser", "imuser", null), Environment.getExternalStorageDirectory() + File.separator + "yyj" + File.separator + "aa.jpg",
                         "/var/ftp/imuser/android/image/2014_01_13/1389600666136_0113161137.jpg", false), new FtpResponseListener()
                 {

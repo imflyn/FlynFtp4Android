@@ -2,25 +2,47 @@ package ftp4jstack;
 
 public class FtpStack
 {
-    public static FtpTask upload(FtpRequest ftpRequest)
+    public static FtpTask ftp4jUpload(FtpRequest ftpRequest)
     {
-        return upload(ftpRequest, null);
+        return ftp4jUpload(ftpRequest, null);
     }
 
-    public static FtpTask upload(FtpRequest ftpRequest, FtpResponseListener ftpResponseHandler)
+    public static FtpTask ftp4jUpload(FtpRequest ftpRequest, FtpResponseListener ftpResponseHandler)
     {
-        FtpTask ftpFuture = new FtpTask(new FtpDispacther(new FtpUploadHandler(ftpRequest, ftpResponseHandler)));
+        FtpTask ftpFuture = new FtpTask(new FtpDispacther(new Ftp4jUploadHandler(ftpRequest, ftpResponseHandler)));
         return ftpFuture;
     }
 
-    public static FtpTask download(FtpRequest ftpRequest)
+    public static FtpTask ftp4jDownload(FtpRequest ftpRequest)
     {
-        return download(ftpRequest, null);
+        return ftp4jDownload(ftpRequest, null);
     }
 
-    public static FtpTask download(FtpRequest ftpRequest, FtpResponseListener ftpResponseHandler)
+    public static FtpTask ftp4jDownload(FtpRequest ftpRequest, FtpResponseListener ftpResponseHandler)
     {
-        FtpTask ftpFuture = new FtpTask(new FtpDispacther(new FtpDownloadHandler(ftpRequest, ftpResponseHandler)));
+        FtpTask ftpFuture = new FtpTask(new FtpDispacther(new Ftp4jDownloadHandler(ftpRequest, ftpResponseHandler)));
+        return ftpFuture;
+    }
+
+    public static FtpTask apacheUpload(FtpRequest ftpRequest)
+    {
+        return apacheUpload(ftpRequest, null);
+    }
+
+    public static FtpTask apacheUpload(FtpRequest ftpRequest, FtpResponseListener ftpResponseHandler)
+    {
+        FtpTask ftpFuture = new FtpTask(new FtpDispacther(new ApacheFtpUploadHandler(ftpRequest, ftpResponseHandler)));
+        return ftpFuture;
+    }
+
+    public static FtpTask apacheDownload(FtpRequest ftpRequest)
+    {
+        return apacheDownload(ftpRequest, null);
+    }
+
+    public static FtpTask apacheDownload(FtpRequest ftpRequest, FtpResponseListener ftpResponseHandler)
+    {
+        FtpTask ftpFuture = new FtpTask(new FtpDispacther(new ApacheFtpDownloadHandler(ftpRequest, ftpResponseHandler)));
         return ftpFuture;
     }
 

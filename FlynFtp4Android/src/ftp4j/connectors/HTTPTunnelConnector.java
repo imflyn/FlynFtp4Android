@@ -210,11 +210,13 @@ public class HTTPTunnelConnector extends FTPConnector
         return socket;
     }
 
+    @Override
     public Socket connectForCommunicationChannel(String host, int port) throws IOException
     {
         return httpConnect(host, port, false);
     }
 
+    @Override
     public Socket connectForDataTransferChannel(String host, int port) throws IOException
     {
         return httpConnect(host, port, true);

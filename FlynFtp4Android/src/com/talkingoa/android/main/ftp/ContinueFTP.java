@@ -271,7 +271,7 @@ public class ContinueFTP
             Log.i("ContinueFTP", "没有断点续传:");
             result = uploadFile(remoteFileName, new File(local), ftpClient, 0, listener);
         }
-        
+
         return result;
     }
 

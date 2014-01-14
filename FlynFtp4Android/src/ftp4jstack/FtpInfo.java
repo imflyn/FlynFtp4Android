@@ -1,6 +1,6 @@
 package ftp4jstack;
 
-public  class FtpInfo
+public class FtpInfo
 {
     private String host;
     private int    port;

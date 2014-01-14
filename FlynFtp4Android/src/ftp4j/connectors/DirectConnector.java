@@ -35,11 +35,13 @@ import java.net.Socket;
 public class DirectConnector extends FTPConnector
 {
 
+    @Override
     public Socket connectForCommunicationChannel(String host, int port) throws IOException
     {
         return tcpConnectForCommunicationChannel(host, port);
     }
 
+    @Override
     public Socket connectForDataTransferChannel(String host, int port) throws IOException
     {
         return tcpConnectForDataTransferChannel(host, port);

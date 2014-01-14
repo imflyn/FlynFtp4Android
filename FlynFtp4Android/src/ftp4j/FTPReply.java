@@ -83,6 +83,7 @@ public class FTPReply
         return messages;
     }
 
+    @Override
     public String toString()
     {
         StringBuffer buffer = new StringBuffer();

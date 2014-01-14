@@ -138,6 +138,7 @@ public class FTPProxyConnector extends FTPConnector
         this.style = style;
     }
 
+    @Override
     public Socket connectForCommunicationChannel(String host, int port) throws IOException
     {
         Socket socket = tcpConnectForCommunicationChannel(proxyHost, proxyPort);
@@ -210,6 +211,7 @@ public class FTPProxyConnector extends FTPConnector
         return socket;
     }
 
+    @Override
     public Socket connectForDataTransferChannel(String host, int port) throws IOException
     {
         return tcpConnectForDataTransferChannel(host, port);

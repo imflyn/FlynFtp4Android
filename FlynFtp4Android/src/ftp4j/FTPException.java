@@ -74,11 +74,13 @@ public class FTPException extends Exception
      * 
      * @return The message of the occurred FTP error.
      */
+    @Override
     public String getMessage()
     {
         return message;
     }
 
+    @Override
     public String toString()
     {
         return getClass().getName() + " [code=" + code + ", message= " + message + "]";

@@ -41,6 +41,7 @@ public class DOSListParser implements FTPListParser
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yy hh:mm a");
 
+    @Override
     public FTPFile[] parse(String[] lines) throws FTPListParseException
     {
         int size = lines.length;

@@ -3969,6 +3969,7 @@ public class FTPClient
         // Create a FTPDataTransferServer object.
         FTPDataTransferServer server = new FTPDataTransferServer()
         {
+            @Override
             public Socket openDataTransferConnection() throws FTPDataTransferException
             {
                 Socket socket = super.openDataTransferConnection();
@@ -4065,6 +4066,7 @@ public class FTPClient
         FTPDataTransferConnectionProvider provider = new FTPDataTransferConnectionProvider()
         {
 
+            @Override
             public Socket openDataTransferConnection() throws FTPDataTransferException
             {
                 // Establish the connection.
@@ -4084,6 +4086,7 @@ public class FTPClient
                 return dtConnection;
             }
 
+            @Override
             public void dispose()
             {
                 // nothing to do
@@ -4257,6 +4260,7 @@ public class FTPClient
         return ret;
     }
 
+    @Override
     public String toString()
     {
         synchronized (lock)
@@ -4404,6 +4408,7 @@ public class FTPClient
     private class AutoNoopTimer extends Thread
     {
 
+        @Override
         public void run()
         {
             synchronized (lock)
