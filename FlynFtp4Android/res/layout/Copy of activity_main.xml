@@ -25,12 +25,38 @@
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/btn_ftp4jupload" />
 
+    <Button
+        android:id="@+id/btn_ftp4jdonload"
+        android:layout_width="wrap_content"
+        android:layout_height="70dip"
+        android:layout_below="@+id/bp_ftp4jupload"
+        android:layout_toLeftOf="@+id/bp_ftp4jupload"
+        android:text="Ftp4j下载" />
+
+    <ProgressBar
+        android:id="@+id/pb_ftp4jdownload"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="40dip"
+        android:layout_alignBottom="@+id/btn_ftp4jdonload"
+        android:layout_alignLeft="@+id/bp_ftp4jupload"
+        android:layout_alignRight="@+id/bp_ftp4jupload" />
+
+    <TextView
+        android:id="@+id/tv_ftp4jdownload"
+        android:layout_width="200dip"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/pb_ftp4jdownload"
+        android:layout_alignRight="@+id/pb_ftp4jdownload"
+        android:gravity="right"
+        android:text="tv_ftp4jdownload" />
+
     <TextView
         android:id="@+id/tv_ftp4jupload"
         android:layout_width="200dip"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/bp_ftp4jupload"
         android:layout_alignRight="@+id/bp_ftp4jupload"
-        android:layout_alignTop="@+id/tv_ftp4jupload"
         android:gravity="right"
         android:text="tv_ftp4jupload" />
 
