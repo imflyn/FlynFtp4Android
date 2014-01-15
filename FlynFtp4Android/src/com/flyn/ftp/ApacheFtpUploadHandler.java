@@ -74,20 +74,8 @@ public class ApacheFtpUploadHandler extends ApacheFtpHandler
             throw new CustomFtpExcetion(e);
         } finally
         {
-            if (null != outputStream)
-                try
-                {
-                    outputStream.close();
-                } catch (IOException e)
-                {
-                }
-            if (null != inputStream)
-                try
-                {
-                    inputStream.close();
-                } catch (IOException e)
-                {
-                }
+            IFtpHandler.closeQuickly(inputStream);
+            IFtpHandler.closeQuickly(outputStream);
         }
         try
         {

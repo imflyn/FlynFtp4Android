@@ -72,22 +72,8 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
             throw new CustomFtpExcetion(e);
         } finally
         {
-            if (null != inputStream)
-                try
-                {
-                    inputStream.close();
-                } catch (IOException e)
-                {
-                    // ingore
-                }
-            if (null != outputStream)
-                try
-                {
-                    outputStream.close();
-                } catch (IOException e)
-                {
-                    // ingore
-                }
+            IFtpHandler.closeQuickly(outputStream);
+            IFtpHandler.closeQuickly(inputStream);
         }
         try
         {

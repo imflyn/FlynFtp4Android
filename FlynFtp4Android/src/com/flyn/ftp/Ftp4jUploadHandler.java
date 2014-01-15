@@ -3,6 +3,7 @@ package com.flyn.ftp;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 
 import ftp4j.FTPFile;
 
@@ -29,22 +30,27 @@ public class Ftp4jUploadHandler extends Ftp4jHandler
         FTPFile ftpFile = getRemoteFile(this.ftpRequest.getRemoteFilePath(), null);
         if (null != ftpFile && ftpFile.getSize() >= localFile.length())
             throw new CustomFtpExcetion("RemoteFile exists.");
-
+        
+        InputStream inputStream= null;
         try
         {
+            inputStream= new BufferedInputStream(new FileInputStream(localFile), 4096);
             this.bytesTotal = (int) localFile.length();
             if (null != ftpFile && ftpFile.getSize() < localFile.length())
             {
                 this.bytesWritten = (int) ftpFile.getSize();
-                this.ftpClient.append(this.ftpRequest.getRemoteFilePath(), new BufferedInputStream(new FileInputStream(localFile), 4096), ftpFile.getSize(), this.ftpDataTransferListener);
+                this.ftpClient.append(this.ftpRequest.getRemoteFilePath(),inputStream, ftpFile.getSize(), this.ftpDataTransferListener);
             } else
             {
-                this.ftpClient.upload(this.ftpRequest.getRemoteFilePath(), new BufferedInputStream(new FileInputStream(localFile), 4096), 0, 0, this.ftpDataTransferListener);
+                this.ftpClient.upload(this.ftpRequest.getRemoteFilePath(), inputStream, 0, 0, this.ftpDataTransferListener);
             }
 
         } catch (Exception e)
         {
             throw new CustomFtpExcetion(e);
+        }finally
+        {
+            IFtpHandler.closeQuickly(inputStream);
         }
 
     }

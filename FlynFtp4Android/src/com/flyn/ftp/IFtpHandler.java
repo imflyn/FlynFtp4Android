@@ -1,5 +1,8 @@
 package com.flyn.ftp;
 
+import java.io.Closeable;
+import java.io.IOException;
+
 public abstract class IFtpHandler
 {
     abstract void doTaskWithRetries();
@@ -11,4 +14,15 @@ public abstract class IFtpHandler
     abstract boolean cancel();
 
     abstract void setUseSynchronousMode(boolean value);
+
+    static void closeQuickly(Closeable stream)
+    {
+        if (null != stream)
+            try
+            {
+                stream.close();
+            } catch (IOException e)
+            {
+            }
+    }
 }
