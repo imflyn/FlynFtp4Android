@@ -43,7 +43,7 @@ public class ApacheFtpUploadHandler extends ApacheFtpHandler
             inputStream = new BufferedInputStream(new FileInputStream(localFile));
             if (null != ftpFile && ftpFile.getSize() < localFile.length())
             {
-                
+
                 this.bytesWritten = (int) ftpFile.getSize();
                 outputStream = new BufferedOutputStream(this.ftpClient.appendFileStream(this.ftpRequest.getRemoteFilePath()));
                 inputStream.skip(ftpFile.getSize());
@@ -53,12 +53,10 @@ public class ApacheFtpUploadHandler extends ApacheFtpHandler
             {
                 outputStream = new BufferedOutputStream(this.ftpClient.storeFileStream(this.ftpRequest.getRemoteFilePath()));
             }
-            
-            
-            
+
             byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
             int count;
-            while ((count = inputStream.read(buffer)) != -1 && !isCancelled())
+            while (!isCancelled() && (count = inputStream.read(buffer)) != -1)
             {
                 outputStream.write(buffer, 0, count);
                 updateProgress(count);

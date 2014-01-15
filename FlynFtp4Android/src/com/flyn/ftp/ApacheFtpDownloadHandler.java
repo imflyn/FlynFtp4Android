@@ -46,7 +46,6 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
             this.bytesTotal = (int) ftpFile.getSize();
             if (localFile.exists() && localFile.length() > 0)
             {
-              
                 this.bytesWritten = (int) tempFile.length();
                 this.ftpClient.setRestartOffset(ftpFile.getSize());
                 outputStream.seek(tempFile.length());
@@ -54,10 +53,10 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
             {
                 tempFile.createNewFile();
             }
-          
+
             int count;
             byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-            while ((count = inputStream.read(buffer)) != -1 && !isCancelled())
+            while (!isCancelled() && (count = inputStream.read(buffer)) != -1)
             {
                 outputStream.write(buffer, 0, count);
                 updateProgress(count);
