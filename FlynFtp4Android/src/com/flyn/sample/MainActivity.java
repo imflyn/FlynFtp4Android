@@ -54,24 +54,16 @@ public class MainActivity extends Activity
             @Override
             public void onClick(View v)
             {
-                new Thread(new Runnable()
+                if (null == task1)
                 {
-
-                    @Override
-                    public void run()
-                    {
-                        if (null == task1)
-                        {
-                            tv_4jupload.setText("start");
-                            jupload();
-                        } else
-                        {
-                            tv_4jupload.setText("stop");
-                            task1.cancel(false);
-                            task1 = null;
-                        }
-                    }
-                }).start();
+                    tv_4jupload.setText("start");
+                    jupload();
+                } else
+                {
+                    tv_4jupload.setText("stop");
+                    task1.cancel(false);
+                    task1 = null;
+                }
             }
         });
 
@@ -81,24 +73,16 @@ public class MainActivity extends Activity
             @Override
             public void onClick(View v)
             {
-                new Thread(new Runnable()
+                if (null == task2)
                 {
-
-                    @Override
-                    public void run()
-                    {
-                        if (null == task2)
-                        {
-                            tv_4jdownload.setText("start");
-                            jdownload();
-                        } else
-                        {
-                            tv_4jdownload.setText("stop");
-                            task2.cancel(false);
-                            task2 = null;
-                        }
-                    }
-                }).start();
+                    tv_4jdownload.setText("start");
+                    jdownload();
+                } else
+                {
+                    tv_4jdownload.setText("stop");
+                    task2.cancel(false);
+                    task2 = null;
+                }
             }
         });
 
@@ -108,56 +92,36 @@ public class MainActivity extends Activity
             @Override
             public void onClick(View v)
             {
-                new Thread(new Runnable()
+                if (null == task3)
                 {
-
-                    @Override
-                    public void run()
-                    {
-                        if (null == task3)
-                        {
-                            tv_apacheupload.setText("start");
-                            aupload();
-                        } else
-                        {
-                            tv_apacheupload.setText("stop");
-                            task3.cancel(false);
-                            task3 = null;
-                        }
-                    }
-                }).start();
+                    tv_apacheupload.setText("start");
+                    aupload();
+                } else
+                {
+                    tv_apacheupload.setText("stop");
+                    task3.cancel(false);
+                    task3 = null;
+                }
             }
         });
-
         findViewById(R.id.btn_apachedownload).setOnClickListener(new OnClickListener()
         {
 
             @Override
             public void onClick(View v)
             {
-                new Thread(new Runnable()
+                if (null == task4)
                 {
-
-                    @Override
-                    public void run()
-                    {
-                        if (null == task4)
-                        {
-                            adownload();
-                            tv_apachedownload.setText("start");
-                        }
-
-                        else
-                        {
-                            tv_apachedownload.setText("stop");
-                            task4.cancel(false);
-                            task4 = null;
-                        }
-                    }
-                }).start();
+                    adownload();
+                    tv_apachedownload.setText("start");
+                } else
+                {
+                    tv_apachedownload.setText("stop");
+                    task4.cancel(false);
+                    task4 = null;
+                }
             }
         });
-
     }
 
     private void jupload()
