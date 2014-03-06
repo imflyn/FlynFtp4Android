@@ -3,9 +3,13 @@ package com.flyn.ftp;
 public class CustomFtpExcetion extends Exception
 {
 
-    private static final long serialVersionUID = 1L;
 
-    public CustomFtpExcetion()
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6758805973960966790L;
+
+	public CustomFtpExcetion()
     {
         super();
     }
