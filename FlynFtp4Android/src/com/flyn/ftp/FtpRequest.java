@@ -5,15 +5,19 @@ public class FtpRequest
     private FtpInfoBean ftpInfo;
     private String  localFilePath;
     private String  remoteFilePath;
-    private boolean ifRetry;
+    private boolean ifRetry=false;
 
     public FtpRequest(FtpInfoBean ftpInfo, String localFilePath, String remoteFilePath, boolean ifRetry)
     {
-        super();
+        this(ftpInfo, localFilePath, remoteFilePath);
+        this.ifRetry = ifRetry;
+    }
+    
+    public FtpRequest(FtpInfoBean ftpInfo, String localFilePath, String remoteFilePath)
+    {
         this.ftpInfo = ftpInfo;
         this.localFilePath = localFilePath;
         this.remoteFilePath = remoteFilePath;
-        this.ifRetry = ifRetry;
     }
 
     public final FtpInfoBean getFtpInfo()
