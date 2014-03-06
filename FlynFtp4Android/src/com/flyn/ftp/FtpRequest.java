@@ -2,12 +2,12 @@ package com.flyn.ftp;
 
 public class FtpRequest
 {
-    private FtpInfo ftpInfo;
+    private FtpInfoBean ftpInfo;
     private String  localFilePath;
     private String  remoteFilePath;
     private boolean ifRetry;
 
-    public FtpRequest(FtpInfo ftpInfo, String localFilePath, String remoteFilePath, boolean ifRetry)
+    public FtpRequest(FtpInfoBean ftpInfo, String localFilePath, String remoteFilePath, boolean ifRetry)
     {
         super();
         this.ftpInfo = ftpInfo;
@@ -16,12 +16,12 @@ public class FtpRequest
         this.ifRetry = ifRetry;
     }
 
-    public final FtpInfo getFtpInfo()
+    public final FtpInfoBean getFtpInfo()
     {
         return ftpInfo;
     }
 
-    public final void setFtpInfo(FtpInfo ftpInfo)
+    public final void setFtpInfo(FtpInfoBean ftpInfo)
     {
         this.ftpInfo = ftpInfo;
     }

@@ -1,6 +1,6 @@
 package com.flyn.ftp;
 
-public class FtpInfo
+public class FtpInfoBean
 {
     private String host;
     private int    port;
@@ -8,7 +8,7 @@ public class FtpInfo
     private String password;
     private String account;
 
-    public FtpInfo(String host, int port, String username, String password, String account)
+    public FtpInfoBean(String host, int port, String username, String password, String account)
     {
         super();
         this.host = host;

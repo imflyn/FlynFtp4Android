@@ -10,7 +10,7 @@ import android.view.View.OnClickListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.flyn.ftp.FtpInfo;
+import com.flyn.ftp.FtpInfoBean;
 import com.flyn.ftp.FtpRequest;
 import com.flyn.ftp.FtpResponseListener;
 import com.flyn.ftp.FtpStack;
@@ -127,7 +127,7 @@ public class MainActivity extends Activity
     private void jupload()
     {
         final long time = System.currentTimeMillis();
-        task1 = FtpStack.ftp4jUpload(new FtpRequest(new FtpInfo("ftpaddresss", 21, "username", "password", null), Environment.getExternalStorageDirectory() + File.separator + "flyn" + File.separator
+        task1 = FtpStack.ftp4jUpload(new FtpRequest(new FtpInfoBean("ftpaddresss", 21, "username", "password", null), Environment.getExternalStorageDirectory() + File.separator + "flyn" + File.separator
                 + "aa.jpg", "/var/ftp/imuser/android/image/2014_01_13/testFtp4j.jpg", false), new FtpResponseListener()
         {
 
@@ -170,7 +170,7 @@ public class MainActivity extends Activity
         // {
         // }
 
-        task2 = FtpStack.ftp4jDownload(new FtpRequest(new FtpInfo("yourftpaddress", 21, "username", "password", null), Environment.getExternalStorageDirectory() + File.separator + "flyn"
+        task2 = FtpStack.ftp4jDownload(new FtpRequest(new FtpInfoBean("yourftpaddress", 21, "username", "password", null), Environment.getExternalStorageDirectory() + File.separator + "flyn"
                 + File.separator + "aa.jpg", "/var/ftp/imuser/android/image/2014_01_13/1389600666136_0113161137.jpg", false), new FtpResponseListener()
         {
 
@@ -204,7 +204,7 @@ public class MainActivity extends Activity
     private void aupload()
     {
         final long time = System.currentTimeMillis();
-        task3 = FtpStack.apacheUpload(new FtpRequest(new FtpInfo("ftpaddresss", 21, "username", "password", null), Environment.getExternalStorageDirectory() + File.separator + "flyn" + File.separator
+        task3 = FtpStack.apacheUpload(new FtpRequest(new FtpInfoBean("ftpaddresss", 21, "username", "password", null), Environment.getExternalStorageDirectory() + File.separator + "flyn" + File.separator
                 + "aa.jpg", "/var/ftp/imuser/android/image/2014_01_13/testFtpApache.jpg", false), new FtpResponseListener()
         {
 
@@ -250,7 +250,7 @@ public class MainActivity extends Activity
         // {
         // }
 
-        task4 = FtpStack.apacheDownload(new FtpRequest(new FtpInfo("ftpaddresss", 21, "username", "password", null), Environment.getExternalStorageDirectory() + File.separator + "flyn"
+        task4 = FtpStack.apacheDownload(new FtpRequest(new FtpInfoBean("ftpaddresss", 21, "username", "password", null), Environment.getExternalStorageDirectory() + File.separator + "flyn"
                 + File.separator + "aa.jpg", "/var/ftp/imuser/android/image/2014_01_13/1389600666136_0113161137.jpg", false), new FtpResponseListener()
         {
 
