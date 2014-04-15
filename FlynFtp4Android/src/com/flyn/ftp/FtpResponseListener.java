@@ -179,7 +179,7 @@ public abstract class FtpResponseListener implements Listener
 
     protected void sendRetryMessage(int retryNo)
     {
-        sendMessage(obtainMessage(retryNo, new Object[] { retryNo }));
+        sendMessage(obtainMessage(RETRY_MESSAGE, new Object[] { retryNo }));
     }
 
     protected void sendFinishMessage()
