@@ -27,12 +27,11 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
 
         File localFile = new File(this.ftpRequest.getLocalFilePath());
         File tempFile = new File(this.ftpRequest.getLocalFilePath().substring(0, this.ftpRequest.getLocalFilePath().lastIndexOf(".")) + ".tmp");
-
-        if (localFile.exists())
-            throw new CustomFtpExcetion("LocalFile already exists.");
-        else if (tempFile.exists() && tempFile.length() >= ftpFile.getSize())
-            throw new CustomFtpExcetion("TempFile already exists but it has error size.");
-        else if (!localFile.exists() && !tempFile.exists())
+        
+        if(localFile.exists()&&localFile.length() >= ftpFile.getSize()||tempFile.exists()&&tempFile.length() >= ftpFile.getSize()){
+        	return;
+        }
+        if (!localFile.exists() && !tempFile.exists())
             tempFile.getParentFile().mkdirs();
 
         boolean result = false;
@@ -44,10 +43,10 @@ public class ApacheFtpDownloadHandler extends ApacheFtpHandler
             inputStream = new BufferedInputStream(this.ftpClient.retrieveFileStream(this.ftpRequest.getRemoteFilePath()));
             outputStream = new RandomAccessFile(tempFile, "rw");
             this.bytesTotal = (int) ftpFile.getSize();
-            if (localFile.exists() && localFile.length() > 0)
+            if (tempFile.exists() && tempFile.length() > 0)
             {
                 this.bytesWritten = (int) tempFile.length();
-                this.ftpClient.setRestartOffset(ftpFile.getSize());
+                this.ftpClient.setRestartOffset(bytesWritten);
                 outputStream.seek(tempFile.length());
             } else
             {
