@@ -1,9 +1,12 @@
 package com.flyn.ftp;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.PatternSyntaxException;
 
+import android.text.TextUtils;
 import android.util.Log;
 import ftp4j.FTPClient;
 import ftp4j.FTPCommunicationListener;
@@ -160,10 +163,41 @@ public abstract class Ftp4jHandler extends IFtpHandler
         try
         {
             if (!remoteFileExists(remoteDirectory, charset))
-                this.ftpClient.createDirectory(new String(remoteDirectory.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
-        } catch (Exception e)
+            {
+                String[] directorys = remoteDirectory.split("/");
+                StringBuilder directory = new StringBuilder();
+                for (int i = 0, len = directorys.length; i < len - 1; i++)
+                {
+                    if (TextUtils.isEmpty(directorys[i]))
+                        continue;
+
+                    directory.append("/");
+                    directory.append(directorys[i]);
+
+                    this.ftpClient.createDirectory(new String(remoteDirectory.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
+
+                    changeWorkingDirectory(directory.toString(), charset);
+
+                }
+            }
+        } catch (PatternSyntaxException e)
         {
-            throw new CustomFtpExcetion("CreateDirectory error Exception", e);
+            throw new CustomFtpExcetion(e);
+        } catch (IllegalStateException e)
+        {
+            throw new CustomFtpExcetion(e);
+        } catch (FTPIllegalReplyException e)
+        {
+            throw new CustomFtpExcetion(e);
+        } catch (FTPException e)
+        {
+            throw new CustomFtpExcetion(e);
+        } catch (UnsupportedEncodingException e)
+        {
+            throw new CustomFtpExcetion(e);
+        } catch (IOException e)
+        {
+            throw new CustomFtpExcetion(e);
         }
     }
 
