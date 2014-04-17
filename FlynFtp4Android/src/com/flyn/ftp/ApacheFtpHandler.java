@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.PatternSyntaxException;
 
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTP;
@@ -15,6 +16,7 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPListParseEngine;
 import org.apache.commons.net.ftp.FTPReply;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 public abstract class ApacheFtpHandler extends IFtpHandler
@@ -170,9 +172,6 @@ public abstract class ApacheFtpHandler extends IFtpHandler
             {
                 ftpFileName = engine.getNext(1);
             }
-            // ftpFileName = this.ftpClient.listDirectories(new
-            // String(remotePath.getBytes(), charset == null ? DEFAULT_CHARSET :
-            // charset));
         } catch (UnsupportedEncodingException e)
         {
             throw new CustomFtpExcetion(e);
@@ -198,10 +197,6 @@ public abstract class ApacheFtpHandler extends IFtpHandler
             {
                 ftpFileName = engine.getNext(1);
             }
-
-            // ftpFileName = this.ftpClient.listFiles(new
-            // String(remotePath.getBytes(), charset == null ? DEFAULT_CHARSET :
-            // charset));
         } catch (UnsupportedEncodingException e)
         {
             throw new CustomFtpExcetion(e);
@@ -217,17 +212,35 @@ public abstract class ApacheFtpHandler extends IFtpHandler
 
     protected void createDirectory(String remoteDirectory, String charset) throws CustomFtpExcetion
     {
-        if (!remoteDirectoryExists(remoteDirectory, charset))
-            try
+        try
+        {
+            if (!remoteDirectoryExists(remoteDirectory, charset))
             {
-                this.ftpClient.makeDirectory(new String(remoteDirectory.getBytes(), charset == null ? DEFAULT_CHARSET : charset));
-            } catch (UnsupportedEncodingException e)
-            {
-                throw new CustomFtpExcetion(e);
-            } catch (IOException e)
-            {
-                throw new CustomFtpExcetion(e);
+                String[] directorys = remoteDirectory.split("/");
+                StringBuilder directory = new StringBuilder();
+                for (int i = 0, len = directorys.length; i < len - 1; i++)
+                {
+                    if (TextUtils.isEmpty(directorys[i]))
+                        continue;
+
+                    directory.append("/");
+                    directory.append(directorys[i]);
+
+                    this.ftpClient.makeDirectory(new String(directory.toString().getBytes(), charset == null ? DEFAULT_CHARSET : charset));
+                    changeWorkingDirectory(directory.toString(), charset);
+
+                }
             }
+        } catch (UnsupportedEncodingException e)
+        {
+            throw new CustomFtpExcetion(e);
+        } catch (PatternSyntaxException e)
+        {
+            throw new CustomFtpExcetion(e);
+        } catch (IOException e)
+        {
+            throw new CustomFtpExcetion(e);
+        }
     }
 
     protected void changeWorkingDirectory(String remoteDirectory, String charset) throws CustomFtpExcetion
